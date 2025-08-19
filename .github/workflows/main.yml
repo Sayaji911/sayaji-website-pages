@@ -1,0 +1,40 @@
+name: Deploy Static Sites to S3
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::381492077721:role/Github_Actions_Role
+          role-session-name: github-actions
+          aws-region: ap-south-1
+
+      - name: Detect changed folders
+        id: changes
+        run: |
+          # Get list of changed top-level directories
+          CHANGED_DIRS=$(git diff --name-only HEAD~1 HEAD | cut -d/ -f1 | sort -u)
+          echo "Changed dirs: $CHANGED_DIRS"
+          echo "changed_dirs=$CHANGED_DIRS" >> $GITHUB_OUTPUT
+
+      - name: Sync changed folders to S3
+        if: steps.changes.outputs.changed_dirs != ''
+        run: |
+          BUCKET_NAME="sayaji-website-pages"   # <-- your bucket
+          for dir in ${{ steps.changes.outputs.changed_dirs }}; do
+            if [ -d "$dir" ]; then
+              echo "Deploying $dir to s3://$BUCKET_NAME/$dir ..."
+              aws s3 sync "$dir" "s3://$BUCKET_NAME/$dir" --delete
+            fi
+          done

@@ -6,10 +6,8 @@ on:
       - main
 
 permissions:         
-  id-token: write     # Required for OIDC
-  contents: read      # Needed to checkout code
-
-
+  id-token: write    
+  contents: read     
 
 jobs:
   deploy:
@@ -26,21 +24,10 @@ jobs:
           role-session-name: github-actions
           aws-region: ap-south-1
 
-      - name: Detect changed folders
-        id: changes
+      - name: Sync all site directories to S3
         run: |
-          # Get list of changed top-level directories
-          CHANGED_DIRS=$(git diff --name-only HEAD~1 HEAD | cut -d/ -f1 | sort -u)
-          echo "Changed dirs: $CHANGED_DIRS"
-          echo "changed_dirs=$CHANGED_DIRS" >> $GITHUB_OUTPUT
-
-      - name: Sync changed folders to S3
-        if: steps.changes.outputs.changed_dirs != ''
-        run: |
-          BUCKET_NAME="sayaji-website-pages"   # <-- your bucket
-          for dir in ${{ steps.changes.outputs.changed_dirs }}; do
-            if [ -d "$dir" ]; then
-              echo "Deploying $dir to s3://$BUCKET_NAME/$dir ..."
-              aws s3 sync "$dir" "s3://$BUCKET_NAME/$dir" --delete
-            fi
+          # Find all top-level directories and sync them to S3
+          for dir in $(find . -maxdepth 1 -type d -not -path '*/\.*' -not -path '.'); do
+            echo "Deploying ${dir#./} contents to s3://${dir#./} ..."
+            aws s3 sync "$dir" "s3://${dir#./}" --delete
           done

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sayaji.dev — Blog</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    function toggleDarkMode() {
+      document.documentElement.classList.toggle('dark');
+    }
+  </script>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans transition-colors duration-300">
+
+  <!-- Header -->
+  <header class="flex justify-between items-center p-6 border-b border-gray-200 dark:border-gray-800">
+    <h1 class="text-2xl font-bold tracking-tight">Sayaji.dev</h1>
+    <nav class="space-x-6">
+      <a href="/" class="hover:text-blue-500">Home</a>
+      <a href="/blog" class="hover:text-blue-500 font-semibold">Blog</a>
+      <a href="/projects" class="hover:text-blue-500">Projects</a>
+      <a href="/about" class="hover:text-blue-500">About</a>
+    </nav>
+    <button onclick="toggleDarkMode()" class="ml-4 px-3 py-1 border rounded-md text-sm hover:bg-gray-200 dark:hover:bg-gray-800">
+      🌓
+    </button>
+  </header>
+
+  <!-- Blog Section -->
+  <main class="max-w-5xl mx-auto px-6 py-12">
+    <h2 class="text-3xl font-bold mb-8">Engineering Blog</h2>
+
+    <!-- Blog Grid -->
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+      
+      <!-- Blog Card -->
+      <article class="bg-white dark:bg-gray-800 rounded-2xl shadow-md hover:shadow-xl overflow-hidden transition">
+        <img src="https://source.unsplash.com/600x400/?cloud,tech" alt="Blog Image" class="w-full h-40 object-cover">
+        <div class="p-5">
+          <h3 class="text-xl font-bold mb-2">Scaling FastAPI with Kubernetes</h3>
+          <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">A step-by-step guide on deploying FastAPI with replicas, load balancing, and zero downtime.</p>
+          <a href="/blog/fastapi-kubernetes" class="text-blue-500 hover:underline text-sm font-medium">Read more →</a>
+        </div>
+      </article>
+
+      <!-- Blog Card -->
+      <article class="bg-white dark:bg-gray-800 rounded-2xl shadow-md hover:shadow-xl overflow-hidden transition">
+        <img src="https://source.unsplash.com/600x400/?devops,cloud" alt="Blog Image" class="w-full h-40 object-cover">
+        <div class="p-5">
+          <h3 class="text-xl font-bold mb-2">Mastering AWS CDK</h3>
+          <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">Breaking down CDK with analogies, from basics to production-ready infrastructure.</p>
+          <a href="/blog/aws-cdk" class="text-blue-500 hover:underline text-sm font-medium">Read more →</a>
+        </div>
+      </article>
+
+      <!-- Blog Card -->
+      <article class="bg-white dark:bg-gray-800 rounded-2xl shadow-md hover:shadow-xl overflow-hidden transition">
+        <img src="https://source.unsplash.com/600x400/?system,design" alt="Blog Image" class="w-full h-40 object-cover">
+        <div class="p-5">
+          <h3 class="text-xl font-bold mb-2">System Design for Engineers</h3>
+          <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">Designing systems like Google Docs, Instagram, or Netflix in a practical way.</p>
+          <a href="/blog/system-design" class="text-blue-500 hover:underline text-sm font-medium">Read more →</a>
+        </div>
+      </article>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="text-center py-8 text-sm text-gray-500 dark:text-gray-400 border-t border-gray-200 dark:border-gray-800">
+    © 2025 Sayaji.dev • Built with TailwindCSS + ❤️
+  </footer>
+
+</body>
+</html>

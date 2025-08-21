@@ -1,76 +1,69 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en" class="dark:bg-gray-950 dark:text-gray-100">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sayaji.dev — Blog</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sayaji's Blog</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    function toggleDarkMode() {
-      document.documentElement.classList.toggle('dark');
-    }
-  </script>
 </head>
-<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans transition-colors duration-300">
+<body class="bg-gray-50 text-gray-800 dark:bg-gray-950 dark:text-gray-100 transition-colors duration-300">
+  <!-- Navbar -->
+  <nav class="flex justify-between items-center px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+    <h1 class="text-2xl font-bold">Sayaji.dev</h1>
+    <div class="flex items-center gap-4">
+      <button id="theme-toggle" class="px-3 py-1 rounded-lg bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 transition">
+        🌙
+      </button>
+    </div>
+  </nav>
 
-  <!-- Header -->
-  <header class="flex justify-between items-center p-6 border-b border-gray-200 dark:border-gray-800">
-    <h1 class="text-2xl font-bold tracking-tight">Sayaji.dev</h1>
-    <nav class="space-x-6">
-      <a href="/" class="hover:text-blue-500">Home</a>
-      <a href="/blog" class="hover:text-blue-500 font-semibold">Blog</a>
-      <a href="/projects" class="hover:text-blue-500">Projects</a>
-      <a href="/about" class="hover:text-blue-500">About</a>
-    </nav>
-    <button onclick="toggleDarkMode()" class="ml-4 px-3 py-1 border rounded-md text-sm hover:bg-gray-200 dark:hover:bg-gray-800">
-      🌓
-    </button>
+  <!-- Hero Section -->
+  <header class="max-w-5xl mx-auto px-6 py-12 text-center">
+    <h2 class="text-4xl font-bold">Thoughts, Experiments & Engineering Notes</h2>
+    <p class="mt-4 text-lg text-gray-600 dark:text-gray-400">A collection of writings on backend, DevOps, and cloud engineering.</p>
   </header>
 
-  <!-- Blog Section -->
-  <main class="max-w-5xl mx-auto px-6 py-12">
-    <h2 class="text-3xl font-bold mb-8">Engineering Blog</h2>
+  <!-- Blog Grid -->
+  <main class="max-w-5xl mx-auto px-6 grid md:grid-cols-2 lg:grid-cols-3 gap-8 pb-16">
+    <!-- Blog Card -->
+    <article class="rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition">
+      <img src="https://picsum.photos/600/400?random=1" alt="blog cover" class="w-full h-48 object-cover" />
+      <div class="p-5">
+        <h3 class="text-xl font-semibold">Scaling FastAPI with Kubernetes</h3>
+        <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">Deploying FastAPI on Kubernetes with replicas, zero downtime, and observability.</p>
+        <a href="#" class="inline-block mt-3 text-blue-600 dark:text-blue-400 font-medium hover:underline">Read More →</a>
+      </div>
+    </article>
 
-    <!-- Blog Grid -->
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-      
-      <!-- Blog Card -->
-      <article class="bg-white dark:bg-gray-800 rounded-2xl shadow-md hover:shadow-xl overflow-hidden transition">
-        <img src="https://source.unsplash.com/600x400/?cloud,tech" alt="Blog Image" class="w-full h-40 object-cover">
-        <div class="p-5">
-          <h3 class="text-xl font-bold mb-2">Scaling FastAPI with Kubernetes</h3>
-          <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">A step-by-step guide on deploying FastAPI with replicas, load balancing, and zero downtime.</p>
-          <a href="/blog/fastapi-kubernetes" class="text-blue-500 hover:underline text-sm font-medium">Read more →</a>
-        </div>
-      </article>
+    <!-- Blog Card -->
+    <article class="rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition">
+      <img src="https://picsum.photos/600/400?random=2" alt="blog cover" class="w-full h-48 object-cover" />
+      <div class="p-5">
+        <h3 class="text-xl font-semibold">AWS ECS Deep Dive</h3>
+        <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">Breaking down ECS with load balancers, target groups, and CDK workflows.</p>
+        <a href="#" class="inline-block mt-3 text-blue-600 dark:text-blue-400 font-medium hover:underline">Read More →</a>
+      </div>
+    </article>
 
-      <!-- Blog Card -->
-      <article class="bg-white dark:bg-gray-800 rounded-2xl shadow-md hover:shadow-xl overflow-hidden transition">
-        <img src="https://source.unsplash.com/600x400/?devops,cloud" alt="Blog Image" class="w-full h-40 object-cover">
-        <div class="p-5">
-          <h3 class="text-xl font-bold mb-2">Mastering AWS CDK</h3>
-          <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">Breaking down CDK with analogies, from basics to production-ready infrastructure.</p>
-          <a href="/blog/aws-cdk" class="text-blue-500 hover:underline text-sm font-medium">Read more →</a>
-        </div>
-      </article>
-
-      <!-- Blog Card -->
-      <article class="bg-white dark:bg-gray-800 rounded-2xl shadow-md hover:shadow-xl overflow-hidden transition">
-        <img src="https://source.unsplash.com/600x400/?system,design" alt="Blog Image" class="w-full h-40 object-cover">
-        <div class="p-5">
-          <h3 class="text-xl font-bold mb-2">System Design for Engineers</h3>
-          <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">Designing systems like Google Docs, Instagram, or Netflix in a practical way.</p>
-          <a href="/blog/system-design" class="text-blue-500 hover:underline text-sm font-medium">Read more →</a>
-        </div>
-      </article>
-
-    </div>
+    <!-- Blog Card -->
+    <article class="rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition">
+      <img src="https://picsum.photos/600/400?random=3" alt="blog cover" class="w-full h-48 object-cover" />
+      <div class="p-5">
+        <h3 class="text-xl font-semibold">DevOps Playbook</h3>
+        <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">Cultural principles, CI/CD, observability, and automation in DevOps engineering.</p>
+        <a href="#" class="inline-block mt-3 text-blue-600 dark:text-blue-400 font-medium hover:underline">Read More →</a>
+      </div>
+    </article>
   </main>
 
-  <!-- Footer -->
-  <footer class="text-center py-8 text-sm text-gray-500 dark:text-gray-400 border-t border-gray-200 dark:border-gray-800">
-    © 2025 Sayaji.dev • Built with TailwindCSS + ❤️
-  </footer>
-
+  <!-- Script for Night Mode -->
+  <script>
+    const toggleBtn = document.getElementById("theme-toggle");
+    toggleBtn.addEventListener("click", () => {
+      document.documentElement.classList.toggle("dark");
+      toggleBtn.textContent =
+        document.documentElement.classList.contains("dark") ? "☀️" : "🌙";
+    });
+  </script>
 </body>
 </html>

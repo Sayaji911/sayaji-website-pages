@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sayaji Chavan - Senior Software Engineer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            color: #000000;
+            line-height: 1.4;
+            max-width: 8.5in;
+            margin: 0 auto;
+            padding: 0.5in;
+            font-size: 11pt;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .header h1 {
+            font-size: 24pt;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .header .title {
+            font-size: 14pt;
+            margin-bottom: 8px;
+        }
+
+        .header .contact-info {
+            font-size: 10pt;
+            line-height: 1.3;
+        }
+
+        .section {
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #000000;
+        }
+
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        .section-title {
+            font-size: 12pt;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+
+        .summary-text {
+            text-align: justify;
+            margin-bottom: 10px;
+        }
+
+        .job {
+            margin-bottom: 15px;
+        }
+
+        .job-header {
+            margin-bottom: 6px;
+        }
+
+        .job-title {
+            font-weight: bold;
+            font-size: 11pt;
+        }
+
+        .company-name {
+            font-weight: bold;
+            font-size: 11pt;
+        }
+
+        .job-duration {
+            font-size: 10pt;
+            margin-top: 2px;
+        }
+
+        .job-location {
+            font-size: 10pt;
+            font-style: italic;
+        }
+
+        .job-responsibilities {
+            margin-top: 6px;
+        }
+
+        .job-responsibilities ul {
+            margin-left: 20px;
+            margin-top: 4px;
+        }
+
+        .job-responsibilities li {
+            margin-bottom: 4px;
+            text-align: justify;
+        }
+
+        .certification-item {
+            margin-bottom: 4px;
+        }
+
+        .cert-name {
+            font-weight: bold;
+        }
+
+        .cert-issuer {
+            font-style: italic;
+        }
+
+        .cert-date {
+            float: right;
+        }
+
+        .skills-grid {
+            display: table;
+            width: 100%;
+        }
+
+        .skill-row {
+            display: table-row;
+            margin-bottom: 6px;
+        }
+
+        .skill-category {
+            display: table-cell;
+            font-weight: bold;
+            width: 25%;
+            vertical-align: top;
+            padding-right: 15px;
+            padding-bottom: 6px;
+        }
+
+        .skill-items {
+            display: table-cell;
+            vertical-align: top;
+            padding-bottom: 6px;
+        }
+
+        .education-item {
+            margin-bottom: 8px;
+        }
+
+        .degree-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 4px;
+        }
+
+        .degree-title {
+            font-weight: bold;
+        }
+
+        .education-duration {
+            font-size: 10pt;
+        }
+
+        .education-location {
+            font-size: 10pt;
+            font-style: italic;
+            margin-bottom: 4px;
+        }
+
+        .projects-grid {
+            display: table;
+            width: 100%;
+        }
+
+        .project {
+            display: table-row;
+            margin-bottom: 10px;
+        }
+
+        .project-name {
+            display: table-cell;
+            font-weight: bold;
+            width: 25%;
+            vertical-align: top;
+            padding-right: 15px;
+            padding-bottom: 8px;
+        }
+
+        .project-details {
+            display: table-cell;
+            vertical-align: top;
+            padding-bottom: 8px;
+        }
+
+        .project-description {
+            margin-bottom: 3px;
+            font-style: italic;
+        }
+
+        .project-tech {
+            font-size: 10pt;
+        }
+
+        .page-info {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .download-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background-color: #0095ff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.2s;
+        }
+
+        .download-btn:hover {
+            background-color: #0c65a5;
+        }
+
+        .visit-count {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #606d76;
+        }
+
+        @media print {
+            body {
+                padding: 0.25in;
+                font-size: 10pt;
+            }
+
+            .page-info {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Sayaji Chavan</h1>
+        <div class="title">Senior Software Engineer</div>
+        <div class="contact-info">
+            <a href="tel:+919892200636">+919892200636</a> ◇ <a href="mailto:sayaji.dev@hotmail.com">sayaji.dev@hotmail.com</a> ◇ Mumbai, Maharashtra, India ◇ <a href="https://www.linkedin.com/in/sayaji-chavan" target="_blank">LinkedIn</a> ◇ <a href="https://github.com/sayaji15" target="_blank">GitHub</a>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">SUMMARY</div>
+        <div class="summary-text">
+            Results-driven Senior Software Engineer with 3+ years of experience specialising in Python, FastAPI, cloud computing (AWS), and scalable fintech applications. Strong expertise in microservices, API development, cloud architecture, and DevOps practices. Proven ability to optimise infrastructure, develop high-performance solutions, and deliver cost-effective deployments at scale. Passionate about building secure and efficient fintech solutions.
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">EXPERIENCE</div>
+        
+        <div class="job">
+            <div class="job-header">
+                <div class="job-title">Senior Software Engineer</div>
+                <div class="company-name">Everstek Technosoft Solutions</div>
+                <div class="job-duration">Jul '24 — Present</div>
+                <div class="job-location">Mumbai, India (Remote)</div>
+            </div>
+            <div class="job-responsibilities">
+                <ul>
+                    <li>Developed a ML Sandbox Environment using AWS SageMaker for secure ML model development on customer PII data for an InsureTech Enterprise.</li>
+                    <li>Managed the complete life cycle of AWS resources, overseeing maintenance, upgrades, commissioning, and decommissioning to ensure performance, scalability, and cost-effectiveness of cloud infrastructure.</li>
+                    <li>Actively participated in security assessments, identifying and remediating security vulnerabilities within AWS infrastructure to maintain a secure and compliant environment.</li>
+                    <li>Automated infrastructure provisioning using Terraform, ensuring Infrastructure-as-Code (IaC) best practices.</li>
+                    <li>Designed and optimise monitoring dashboards and alerting systems using AWS CloudWatch and Site24x7, improving cloud application observability and auto-scaling efficiency.</li>
+                    <li>Used Infrastructure as Code (IaC) principles with Terraform to set up infrastructure for a scalable, serverless Gen AI application using AWS services (Lambda, API Gateway, S3, DynamoDB, Textract, IAM).</li>
+                    <li>Designed and optimized monitoring dashboards and alerting systems using AWS CloudWatch, Site24x7, and New Relic, improving cloud application observability and auto-scaling efficiency.</li>
+                    <li>Managed Dev, QA, UAT, and Production deployments, creating deployment playbooks, incident response strategies, and post-deployment monitoring frameworks to improve operational resilience.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="job">
+            <div class="job-header">
+                <div class="job-title">Software Engineer</div>
+                <div class="company-name">Everestek Technosoft Solutions</div>
+                <div class="job-duration">Nov '21 — Jul '24</div>
+                <div class="job-location">Mumbai, India (Remote)</div>
+            </div>
+            <div class="job-responsibilities">
+                <ul>
+                    <li>Led the development of a Super App, setting up the initial project code structure and cloud infrastructure.</li>
+                    <li>Provisioned key AWS services: ECS, RDS, ELB, EC2, Lambda, API Gateway, Elasticsearch, Cognito</li>
+                    <li>Implemented CI/CD pipelines (GitHub Actions, AWS CodePipeline, CircleCI) with blue-green deployments and configured Liquibase for database version control.</li>
+                    <li>Led client collaboration to gather requirements and design a real-time bus proximity feature, developing a PoC using the Observer pattern to track 5,000 buses efficiently.</li>
+                    <li>Redesigned and developed microservices with FastAPI for a legacy patient engagement platform, doubling form-filling speed with scalable, maintainable, and unit-tested code using Pytest.</li>
+                    <li>Deployed and managed containerised applications using Docker, Kubernetes (EKS), and AWS ECS.</li>
+                    <li>Contributed across all project phases, from infrastructure setup to API development, and actively participated in Agile ceremonies to improve team collaboration and efficiency.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">CERTIFICATIONS</div>
+        <div class="certification-item">
+            <span class="cert-name">AWS Solutions Architect Associate</span>, <span class="cert-issuer">AWS</span>
+            <span class="cert-date">Oct '23</span>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">SKILLS</div>
+        <div class="skills-grid">
+            <div class="skill-row">
+                <div class="skill-category">Programming Languages</div>
+                <div class="skill-items">Python, SQL, Go, Bash</div>
+            </div>
+            <div class="skill-row">
+                <div class="skill-category">Cloud Technologies</div>
+                <div class="skill-items">AWS, Terraform, CircleCI, Site24x7, Docker, Kubernetes, CI/CD, Jenkins, GitHub Actions, Monitoring (CloudWatch, Grafana), Linux</div>
+            </div>
+            <div class="skill-row">
+                <div class="skill-category">Web Development</div>
+                <div class="skill-items">FastAPI, Django, React.js, MongoDB, PostgreSQL, Flask</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">EDUCATION</div>
+        <div class="education-item">
+            <div class="degree-info">
+                <span class="degree-title">BS in Information Technology, University Of Mumbai</span>
+                <span class="education-duration">Jun '16 — Jan '20</span>
+            </div>
+            <div class="education-location">Mumbai, India</div>
+            <div>Programming, Data Structures & Algorithm, Operating Systems and Networking.</div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">PROJECTS</div>
+        <div class="projects-grid">
+            <div class="project">
+                <div class="project-name">URL Shortener</div>
+                <div class="project-details">
+                    <div class="project-description">A simple hassle free URL shortner</div>
+                    <div class="project-tech">Python FastAPI, MongoDB, Javascript, HTML, CSS</div>
+                </div>
+            </div>
+            <div class="project">
+                <div class="project-name">Shipment Tracking Bot</div>
+                <div class="project-details">
+                    <div class="project-description">A Whatsapp Bot that scrapes Flipkart's Ekart and sends your Flipkart Package Status.</div>
+                    <div class="project-tech">Python, FastAPI, BeautifulSoup, Twilio, Azure</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="profiles">
+    </div>
+
+    <div class="page-info">
+        <button onclick="downloadPDF()" class="download-btn">
+            <i class="fa fa-download"></i> Download PDF
+        </button>
+        <div class="visit-count">
+            <i class="fa fa-eye"></i> <span id="visitCount">-</span> visits
+        </div>
+    </div>
+
+    <script>
+        function downloadPDF() {
+            window.print();
+        }
+
+        async function incrementVisitCount() {
+            try {
+                const response = await fetch('/count', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                document.getElementById('visitCount').textContent = data.visits;
+                
+                // Mark this session as counted
+                sessionStorage.setItem('visitCounted', 'true');
+            } catch (error) {
+                console.error('Error incrementing visit count:', error);
+                document.getElementById('visitCount').textContent = '?';
+            }
+        }
+
+        async function getVisitCount() {
+            try {
+                const response = await fetch('/count', {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                document.getElementById('visitCount').textContent = data.visits;
+            } catch (error) {
+                console.error('Error fetching visit count:', error);
+                document.getElementById('visitCount').textContent = '?';
+            }
+        }
+
+        async function handleVisit() {
+            // Check if visit was already counted in this session
+            const visitCounted = sessionStorage.getItem('visitCounted');
+            
+            if (!visitCounted) {
+                // First visit in this session - increment counter
+                await incrementVisitCount();
+            } else {
+                // Returning visitor in same session - just get current count
+                await getVisitCount();
+            }
+        }
+
+        // Call handleVisit when page loads
+        document.addEventListener('DOMContentLoaded', handleVisit);
+
+        // Handle visibility changes (tab focus/blur)
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') {
+                getVisitCount(); // Update counter when tab becomes visible
+            }
+        });
+    </script>
+</body>
+</html>

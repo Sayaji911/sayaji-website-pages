@@ -1249,31 +1249,37 @@
 
       async function handleVisit() {
         try {
-            // Only make the GET request if not counted in this session
-            if (!sessionStorage.getItem("visitCounted")) {
-                const response = await fetch('/count', {
-                    method: 'GET',
-                    headers: { 'Accept': 'application/json' }
-                });
+          // First-time visitor
+          if (!localStorage.getItem("visitCounted")) {
+            const response = await fetch("/count", {
+              method: "GET",
+              headers: { Accept: "application/json" },
+            });
 
-                if (!response.ok) {
-                    throw new Error(`HTTP error: ${response.status}`);
-                }
-
-                const data = await response.json();
-                document.getElementById("visitCount").textContent = data.visits;
-                
-                // Mark this session as counted
-                sessionStorage.setItem("visitCounted", "true");
+            if (!response.ok) {
+              throw new Error(`HTTP error: ${response.status}`);
             }
-        } catch (error) {
-            console.error("Error with visit counter:", error);
-            document.getElementById("visitCount").textContent = "?";
-        }
-    }
 
-    // Call on page load
-    document.addEventListener("DOMContentLoaded", handleVisit);
+            const data = await response.json();
+            document.getElementById("visitCount").textContent = data.visits;
+
+            // Save visit status + the count value locally
+            localStorage.setItem("visitCounted", "true");
+            localStorage.setItem("visitValue", data.visits);
+          }
+          // Returning visitor → no API call, just use stored value
+          else {
+            const oldValue = localStorage.getItem("visitValue");
+            document.getElementById("visitCount").textContent = oldValue ?? "?";
+          }
+        } catch (error) {
+          console.error("Error with visit counter:", error);
+          document.getElementById("visitCount").textContent = "?";
+        }
+      }
+
+      // Call on page load
+      document.addEventListener("DOMContentLoaded", handleVisit);
     </script>
   </body>
 </html>

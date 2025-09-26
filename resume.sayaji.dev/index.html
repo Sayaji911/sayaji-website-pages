@@ -1249,29 +1249,28 @@
 
       async function handleVisit() {
         try {
-          // First-time visitor
-          if (!localStorage.getItem("visitCounted")) {
-            const response = await fetch("/count", {
-              method: "GET",
-              headers: { Accept: "application/json" },
-            });
-
-            if (!response.ok) {
-              throw new Error(`HTTP error: ${response.status}`);
-            }
-
-            const data = await response.json();
-            document.getElementById("visitCount").textContent = data.visits;
-
-            // Save visit status + the count value locally
-            localStorage.setItem("visitCounted", "true");
-            localStorage.setItem("visitValue", data.visits);
+          // Check if we've already stored a visit count in localStorage
+          const savedCount = localStorage.getItem("visitCount");
+          if (savedCount) {
+            document.getElementById("visitCount").textContent = savedCount;
+            return; // Skip calling API again
           }
-          // Returning visitor → no API call, just use stored value
-          else {
-            const oldValue = localStorage.getItem("visitValue");
-            document.getElementById("visitCount").textContent = oldValue ?? "?";
+
+          // First-time visitor → call backend
+          const response = await fetch("/count", {
+            method: "GET",
+            headers: { Accept: "application/json" },
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP error: ${response.status}`);
           }
+
+          const data = await response.json();
+          document.getElementById("visitCount").textContent = data.visits;
+
+          // Save visit count locally to avoid duplicate increments on refresh
+          localStorage.setItem("visitCount", data.visits);
         } catch (error) {
           console.error("Error with visit counter:", error);
           document.getElementById("visitCount").textContent = "?";

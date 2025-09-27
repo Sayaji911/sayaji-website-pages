@@ -1254,12 +1254,15 @@
             method: "GET",
             headers: { Accept: "application/json" },
           });
+          console.log("Backend response:", response.data); // 👈 debug line
 
           if (!response.ok) {
             throw new Error(`HTTP error: ${response.status}`);
           }
 
           const data = await response.json();
+          console.log("JSON:", data); // 👈 debug line
+
           document.getElementById("visitCount").textContent =
             data.unique_visitors;
         } catch (error) {

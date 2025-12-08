@@ -1,0 +1,46 @@
+site_name: "Sayaji's Blog"
+site_description: "Tech Blog • Cloud • Architecture"
+site_url: "https://blog.sayaji.dev"
+docs_dir: "docs/blog"
+
+theme:
+  name: cinder
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.top
+    - navigation.tracking
+    - header.autohide
+    - content.code.copy
+    - content.action.edit
+    - content.action.view
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+plugins:
+  - search
+
+nav:
+  - Blog: index.md
+  - Posts:
+      - S3 Static Website: posts/s3-static-website.md
+
+markdown_extensions:
+  - admonition
+  - footnotes
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.details

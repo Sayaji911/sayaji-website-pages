@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Tech Blog • Cloud • Architecture">
+    
+    <link rel="canonical" href="https://blog.sayaji.dev/posts/s3-static-website/">
+    <link rel="shortcut icon" href="../../img/favicon.ico">
+
+    
+    <title>S3 Static Website - Sayaji's Blog</title>
+    
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/v4-shims.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hack-font@3.3.0/build/web/hack.min.css">
+    <link href='//rsms.me/inter/inter.css' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,600,700&subset=latin-ext,latin' rel='stylesheet' type='text/css'>
+    <link href="../../css/bootstrap-custom.min.css" rel="stylesheet">
+    <link href="../../css/base.min.css" rel="stylesheet">
+    <link href="../../css/cinder.min.css" rel="stylesheet">
+
+    
+        
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/styles/github.min.css">
+        
+    
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+            <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+        <![endif]-->
+
+    
+
+     
+</head>
+
+<body>
+
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            
+
+            <!-- Main title -->
+
+            
+              <a class="navbar-brand" href="../..">Sayaji's Blog</a>
+            
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+                <!-- Main navigation -->
+                <ul class="nav navbar-nav">
+                
+                
+                    <li >
+                        <a href="../..">Blog</a>
+                    </li>
+                
+                
+                
+                    <li class="dropdown active">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Posts <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                        
+                            
+<li class="active">
+    <a href="./">S3 Static Website</a>
+</li>
+
+                        
+                        </ul>
+                    </li>
+                
+                
+                </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                            <i class="fas fa-search"></i> Search
+                        </a>
+                    </li>
+                    <li >
+                        <a rel="prev" href="../..">
+                            <i class="fas fa-arrow-left"></i> Previous
+                        </a>
+                    </li>
+                    <li class="disabled">
+                        <a rel="next" >
+                            Next <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+    <div class="container">
+        
+        
+        <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="first-level active"><a href="#from-manual-aws-setup-to-infrastructure-as-code-my-cdk-journey">From Manual AWS Setup to Infrastructure as Code: My CDK Journey</a></li>
+            <li class="second-level"><a href="#what-were-building">What We're Building</a></li>
+                
+            <li class="second-level"><a href="#why-aws-cdk">Why AWS CDK?</a></li>
+                
+            <li class="second-level"><a href="#the-pattern-stack-composition">The Pattern: Stack Composition</a></li>
+                
+            <li class="second-level"><a href="#key-constructs">Key Constructs</a></li>
+                
+                <li class="third-level"><a href="#1-s3-bucket-secure-by-default">1. S3 Bucket (Secure by Default)</a></li>
+                <li class="third-level"><a href="#2-cloudfront-distribution-multi-origin">2. CloudFront Distribution (Multi-Origin)</a></li>
+                <li class="third-level"><a href="#3-lambda-dynamodb-visitor-counter">3. Lambda + DynamoDB (Visitor Counter)</a></li>
+            <li class="second-level"><a href="#challenges-i-faced">Challenges I Faced</a></li>
+                
+                <li class="third-level"><a href="#1-cloudfront-origin-access-control-oac">1. CloudFront Origin Access Control (OAC)</a></li>
+                <li class="third-level"><a href="#2-cross-stack-references">2. Cross-Stack References</a></li>
+                <li class="third-level"><a href="#3-api-gateway-authorizer">3. API Gateway Authorizer</a></li>
+            <li class="second-level"><a href="#testing-strategy">Testing Strategy</a></li>
+                
+                <li class="third-level"><a href="#1-python-unit-tests-lambda-functions">1. Python Unit Tests (Lambda Functions)</a></li>
+                <li class="third-level"><a href="#2-cdk-snapshot-tests-infrastructure">2. CDK Snapshot Tests (Infrastructure)</a></li>
+            <li class="second-level"><a href="#cicd-pipeline">CI/CD Pipeline</a></li>
+                
+            <li class="second-level"><a href="#lessons-learned">Lessons Learned</a></li>
+                
+            <li class="second-level"><a href="#whats-next">What's Next?</a></li>
+                
+                <li class="third-level"><a href="#1-add-more-websites">1. Add More Websites</a></li>
+                <li class="third-level"><a href="#2-monitoring-alerts">2. Monitoring &amp; Alerts</a></li>
+                <li class="third-level"><a href="#3-cost-optimization">3. Cost Optimization</a></li>
+                <li class="third-level"><a href="#4-waf-for-security">4. WAF for Security</a></li>
+            <li class="second-level"><a href="#conclusion">Conclusion</a></li>
+                
+    </ul>
+</div></div>
+        <div class="col-md-9" role="main">
+
+<h1 id="from-manual-aws-setup-to-infrastructure-as-code-my-cdk-journey">From Manual AWS Setup to Infrastructure as Code: My CDK Journey</h1>
+<p>Last week, I wanted to host a static website (like a blog or portfolio) on AWS. At first, I set up everything manually—creating S3 buckets, CloudFront distributions, and Route53 DNS records through the AWS console.</p>
+<p>It worked, but I quickly ran into a problem: <strong>the process was tedious and not reproducible</strong>.</p>
+<p>For example, if I wanted to host <code>blog.sayaji.dev</code>, I would need to:</p>
+<ul>
+<li>Create an S3 bucket for storage</li>
+<li>Set up a CloudFront distribution for content delivery</li>
+<li>Configure DNS records in Route53</li>
+<li><strong>Repeat the same steps again for every new domain</strong></li>
+</ul>
+<p>That's when I realized: <strong>This needs Infrastructure as Code (IaC)</strong>.</p>
+<p>I considered a few options: Terraform, Pulumi, or AWS CDK. I decided to go with <strong>AWS CDK</strong>, thinking it would be a great learning experience.</p>
+<h2 id="what-were-building">What We're Building</h2>
+<p>Here's the architecture we'll create with CDK:</p>
+<p><img alt="Architecture Diagram" src="../assets/Resume_Wesbite.drawio.svg" /></p>
+<p>Our serverless infrastructure includes:</p>
+<ul>
+<li><strong>Amazon S3</strong> - Low-cost storage for static assets (HTML, CSS, JS, images)</li>
+<li><strong>CloudFront</strong> - Global CDN for low-latency content delivery with SSL</li>
+<li><strong>Route 53</strong> - DNS management for custom domains</li>
+<li><strong>API Gateway + Lambda</strong> - Dynamic features (visitor counter)</li>
+<li><strong>DynamoDB</strong> - Data persistence</li>
+<li><strong>Secrets Manager</strong> - Secure API authentication</li>
+</ul>
+<p><strong>The Flow:</strong>
+1. User visits <code>resume.sayaji.dev</code>
+2. Route53 routes to CloudFront distribution
+3. CloudFront serves static files from S3
+4. JavaScript calls <code>/count</code> endpoint
+5. CloudFront routes <code>/count</code> to API Gateway (with secret header)
+6. API Gateway authorizer validates the secret
+7. Counter Lambda updates DynamoDB and returns count
+8. Frontend displays the visitor count</p>
+<h2 id="why-aws-cdk">Why AWS CDK?</h2>
+<p>Before diving into code, let me explain why I chose CDK over other IaC tools.</p>
+<p><strong>CDK uses three core concepts:</strong></p>
+<ul>
+<li><strong>Construct</strong> - A reusable building block (like a Lego brick) that creates AWS resources</li>
+<li><strong>Stack</strong> - A logical deployment unit containing multiple constructs</li>
+<li><strong>App</strong> - The root container for all your stacks</li>
+</ul>
+<p>I like to think of constructs as <strong>Lego bricks</strong> single, reusable pieces that create one or more AWS resources.</p>
+<p>For example:
+- <code>s3.Bucket</code> → creates an AWS S3 bucket
+- <code>cloudfront.Distribution</code> → creates a CloudFront distribution
+- <code>route53.ARecord</code> → creates a DNS record</p>
+<p>The beauty? You write TypeScript instead of YAML. Here's a simple example:</p>
+<div class="highlight"><pre><span></span><code><span class="ow">new</span><span class="w"> </span><span class="nx">s3</span><span class="p">.</span><span class="nx">Bucket</span><span class="p">(</span><span class="nx">scope</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;WebsiteBucket&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">blockPublicAccess</span><span class="o">:</span><span class="w"> </span><span class="kt">s3.BlockPublicAccess.BLOCK_ALL</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">encryption</span><span class="o">:</span><span class="w"> </span><span class="kt">s3.BucketEncryption.S3_MANAGED</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">enforceSSL</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
+<span class="p">});</span>
+</code></pre></div>
+<h2 id="the-pattern-stack-composition">The Pattern: Stack Composition</h2>
+<p>Instead of one monolithic stack, I separated concerns into three stacks:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="nx">app</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">cdk</span><span class="p">.</span><span class="nx">App</span><span class="p">();</span>
+
+<span class="c1">// 1. Base infrastructure (deploy once)</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">base</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">BaseInfraStack</span><span class="p">(</span><span class="nx">app</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;BaseInfraStack&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">env</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">account</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;123456789&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">region</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;us-east-1&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="p">});</span>
+
+<span class="c1">// 2. Backend services (dynamic features)</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">backend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">BackendStack</span><span class="p">(</span><span class="nx">app</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;BackendStack&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">env</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">account</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;123456789&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">region</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;us-east-1&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="p">});</span>
+
+<span class="c1">// 3. Website stacks (reusable pattern)</span>
+<span class="ow">new</span><span class="w"> </span><span class="nx">ResumeStack</span><span class="p">(</span><span class="nx">app</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;ResumeStack&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">hostedZoneId</span><span class="o">:</span><span class="w"> </span><span class="kt">base.hostedZone.hostedZoneId</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">certificateArn</span><span class="o">:</span><span class="w"> </span><span class="kt">base.certificate.certificateArn</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">apiUrl</span><span class="o">:</span><span class="w"> </span><span class="kt">backend.apiUrl</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">cfSecret</span><span class="o">:</span><span class="w"> </span><span class="kt">backend.cfSecret</span><span class="p">,</span>
+<span class="p">});</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">synth</span><span class="p">();</span>
+</code></pre></div>
+<p><strong>Why this pattern?</strong>
+1. <strong>Deploy shared resources once</strong> (Route53, ACM Certificate)
+2. <strong>Pass outputs between stacks</strong> using cross-stack references
+3. <strong>Reuse patterns</strong> across multiple websites</p>
+<h2 id="key-constructs">Key Constructs</h2>
+<p>Let me show you the most important constructs I built.</p>
+<h3 id="1-s3-bucket-secure-by-default">1. S3 Bucket (Secure by Default)</h3>
+<div class="highlight"><pre><span></span><code><span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">WebsiteBucket</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">Construct</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">public</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="nx">bucket</span><span class="o">:</span><span class="w"> </span><span class="kt">s3.Bucket</span><span class="p">;</span>
+
+<span class="w">  </span><span class="kr">constructor</span><span class="p">(</span><span class="nx">scope</span><span class="o">:</span><span class="w"> </span><span class="kt">Construct</span><span class="p">,</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">props</span><span class="o">:</span><span class="w"> </span><span class="kt">MyBucketProps</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">super</span><span class="p">(</span><span class="nx">scope</span><span class="p">,</span><span class="w"> </span><span class="nx">id</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">bucket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">s3</span><span class="p">.</span><span class="nx">Bucket</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Bucket&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">bucketName</span><span class="o">:</span><span class="w"> </span><span class="kt">props.bucketName</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">websiteIndexDocument</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;index.html&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">blockPublicAccess</span><span class="o">:</span><span class="w"> </span><span class="kt">s3.BlockPublicAccess.BLOCK_ALL</span><span class="p">,</span><span class="w"> </span><span class="c1">// Security first!</span>
+<span class="w">      </span><span class="nx">removalPolicy</span><span class="o">:</span><span class="w"> </span><span class="kt">RemovalPolicy.DESTROY</span><span class="p">,</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Key decision:</strong> Block all public access. CloudFront accesses S3 using Origin Access Control (OAC), not public URLs.</p>
+<h3 id="2-cloudfront-distribution-multi-origin">2. CloudFront Distribution (Multi-Origin)</h3>
+<p>This was the trickiest part. I needed CloudFront to serve:
+- Static content from S3 (default behavior)
+- API requests to API Gateway (path <code>/count</code>)</p>
+<div class="highlight"><pre><span></span><code><span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">WebsiteDistribution</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">Construct</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kr">constructor</span><span class="p">(</span><span class="nx">scope</span><span class="o">:</span><span class="w"> </span><span class="kt">Construct</span><span class="p">,</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">props</span><span class="o">:</span><span class="w"> </span><span class="kt">CloudFrontProps</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">super</span><span class="p">(</span><span class="nx">scope</span><span class="p">,</span><span class="w"> </span><span class="nx">id</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// Optional API origin for dynamic features</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">apiOrigin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">props</span><span class="p">.</span><span class="nx">apiUrl</span>
+<span class="w">      </span><span class="o">?</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">origins</span><span class="p">.</span><span class="nx">HttpOrigin</span><span class="p">(</span><span class="nx">extractDomain</span><span class="p">(</span><span class="nx">props</span><span class="p">.</span><span class="nx">apiUrl</span><span class="p">),</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nx">protocolPolicy</span><span class="o">:</span><span class="w"> </span><span class="kt">cloudfront.OriginProtocolPolicy.HTTPS_ONLY</span><span class="p">,</span>
+<span class="w">          </span><span class="nx">customHeaders</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="s2">&quot;x-cf-secret&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">props</span><span class="p">.</span><span class="nx">cfSecret</span><span class="p">.</span><span class="nx">secretValueFromJson</span><span class="p">(</span><span class="s1">&#39;x-cf-secret&#39;</span><span class="p">).</span><span class="nx">unsafeUnwrap</span><span class="p">()</span>
+<span class="w">          </span><span class="p">},</span>
+<span class="w">        </span><span class="p">})</span>
+<span class="w">      </span><span class="o">:</span><span class="w"> </span><span class="kc">undefined</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">distribution</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">cloudfront</span><span class="p">.</span><span class="nx">Distribution</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Distribution&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">defaultBehavior</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">origin</span><span class="o">:</span><span class="w"> </span><span class="kt">props.s3Origin</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">viewerProtocolPolicy</span><span class="o">:</span><span class="w"> </span><span class="kt">cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS</span><span class="p">,</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="c1">// Route /count to API Gateway</span>
+<span class="w">      </span><span class="nx">additionalBehaviors</span><span class="o">:</span><span class="w"> </span><span class="kt">apiOrigin</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="p">[</span><span class="nx">props</span><span class="p">.</span><span class="nx">apiPath</span><span class="p">]</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nx">origin</span><span class="o">:</span><span class="w"> </span><span class="kt">apiOrigin</span><span class="p">,</span>
+<span class="w">          </span><span class="nx">cachePolicy</span><span class="o">:</span><span class="w"> </span><span class="kt">cloudfront.CachePolicy.CACHING_DISABLED</span><span class="p">,</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">      </span><span class="p">}</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="kc">undefined</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">domainNames</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">props</span><span class="p">.</span><span class="nx">siteDomain</span><span class="p">],</span>
+<span class="w">      </span><span class="nx">certificate</span><span class="o">:</span><span class="w"> </span><span class="kt">props.certificate</span><span class="p">,</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>The magic:</strong> CloudFront automatically adds the <code>x-cf-secret</code> header to API requests, which the Lambda authorizer validates. This prevents direct API access!</p>
+<h3 id="3-lambda-dynamodb-visitor-counter">3. Lambda + DynamoDB (Visitor Counter)</h3>
+<p>The counter Lambda tracks unique visitors by IP:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+    <span class="n">src_ip</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;headers&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;x-forwarded-for&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">src_ip</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;statusCode&quot;</span><span class="p">:</span> <span class="mi">400</span><span class="p">,</span> <span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;No IP found&quot;</span><span class="p">})}</span>
+
+    <span class="c1"># Try to insert IP, fail silently if it exists</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">table</span><span class="o">.</span><span class="n">put_item</span><span class="p">(</span>
+            <span class="n">Item</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">src_ip</span><span class="p">},</span>
+            <span class="n">ConditionExpression</span><span class="o">=</span><span class="s2">&quot;attribute_not_exists(id)&quot;</span>  <span class="c1"># Only insert if new</span>
+        <span class="p">)</span>
+    <span class="k">except</span> <span class="n">ClientError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;Error&quot;</span><span class="p">][</span><span class="s2">&quot;Code&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;ConditionalCheckFailedException&quot;</span><span class="p">:</span>
+            <span class="k">raise</span>
+
+    <span class="c1"># Count all unique IPs</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="n">Select</span><span class="o">=</span><span class="s2">&quot;COUNT&quot;</span><span class="p">)[</span><span class="s2">&quot;Count&quot;</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;statusCode&quot;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+        <span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="s2">&quot;ip&quot;</span><span class="p">:</span> <span class="n">src_ip</span><span class="p">,</span> <span class="s2">&quot;unique_visitors&quot;</span><span class="p">:</span> <span class="n">total</span><span class="p">})</span>
+    <span class="p">}</span>
+</code></pre></div>
+<p><strong>DynamoDB table:</strong>
+<div class="highlight"><pre><span></span><code><span class="ow">new</span><span class="w"> </span><span class="nx">dynamodb</span><span class="p">.</span><span class="nx">Table</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;CounterTable&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">partitionKey</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;id&quot;</span><span class="p">,</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="nx">dynamodb</span><span class="p">.</span><span class="nx">AttributeType</span><span class="p">.</span><span class="nx">STRING</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="nx">billingMode</span><span class="o">:</span><span class="w"> </span><span class="kt">dynamodb.BillingMode.PAY_PER_REQUEST</span><span class="p">,</span><span class="w"> </span><span class="c1">// Serverless pricing!</span>
+<span class="p">});</span>
+</code></pre></div></p>
+<h2 id="challenges-i-faced">Challenges I Faced</h2>
+<h3 id="1-cloudfront-origin-access-control-oac">1. CloudFront Origin Access Control (OAC)</h3>
+<p>Initially, I used the deprecated Origin Access Identity (OAI). Switching to OAC took some trial and error:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// ❌ Old way (deprecated)</span>
+<span class="nx">origins</span><span class="p">.</span><span class="nx">S3Origin</span><span class="p">.</span><span class="nx">withOriginAccessIdentity</span><span class="p">(</span><span class="nx">bucket</span><span class="p">)</span>
+
+<span class="c1">// ✅ New way</span>
+<span class="nx">origins</span><span class="p">.</span><span class="nx">S3BucketOrigin</span><span class="p">.</span><span class="nx">withOriginAccessControl</span><span class="p">(</span><span class="nx">bucket</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="2-cross-stack-references">2. Cross-Stack References</h3>
+<p>Passing values between stacks required enabling <code>crossRegionReferences</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="ow">new</span><span class="w"> </span><span class="nx">BaseInfraStack</span><span class="p">(</span><span class="nx">app</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;BaseInfraStack&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">crossRegionReferences</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span><span class="w"> </span><span class="c1">// Required!</span>
+<span class="p">});</span>
+</code></pre></div>
+<h3 id="3-api-gateway-authorizer">3. API Gateway Authorizer</h3>
+<p>Setting up the Lambda authorizer was tricky. The authorizer must return an IAM policy:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">generate_policy</span><span class="p">(</span><span class="n">principal_id</span><span class="p">,</span> <span class="n">effect</span><span class="p">,</span> <span class="n">resource</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;principalId&quot;</span><span class="p">:</span> <span class="n">principal_id</span><span class="p">,</span>
+        <span class="s2">&quot;policyDocument&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;Version&quot;</span><span class="p">:</span> <span class="s2">&quot;2012-10-17&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Statement&quot;</span><span class="p">:</span> <span class="p">[{</span>
+                <span class="s2">&quot;Action&quot;</span><span class="p">:</span> <span class="s2">&quot;execute-api:Invoke&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Effect&quot;</span><span class="p">:</span> <span class="n">effect</span><span class="p">,</span>  <span class="c1"># &quot;Allow&quot; or &quot;Deny&quot;</span>
+                <span class="s2">&quot;Resource&quot;</span><span class="p">:</span> <span class="n">resource</span>
+            <span class="p">}]</span>
+        <span class="p">},</span>
+    <span class="p">}</span>
+</code></pre></div>
+<h2 id="testing-strategy">Testing Strategy</h2>
+<p>I use <strong>two types of tests</strong>:</p>
+<h3 id="1-python-unit-tests-lambda-functions">1. Python Unit Tests (Lambda Functions)</h3>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">CounterLambdaTest</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+    <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;lambda_functions.counter.index.table&quot;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_lambda_success</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mock_table</span><span class="p">):</span>
+        <span class="n">mock_table</span><span class="o">.</span><span class="n">put_item</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">mock_table</span><span class="o">.</span><span class="n">scan</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Count&quot;</span><span class="p">:</span> <span class="mi">123</span><span class="p">}</span>
+
+        <span class="n">event</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;headers&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;x-forwarded-for&quot;</span><span class="p">:</span> <span class="s2">&quot;1.2.3.4&quot;</span><span class="p">}}</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;statusCode&quot;</span><span class="p">],</span> <span class="mi">200</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s2">&quot;unique_visitors&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;body&quot;</span><span class="p">]))</span>
+</code></pre></div>
+<h3 id="2-cdk-snapshot-tests-infrastructure">2. CDK Snapshot Tests (Infrastructure)</h3>
+<div class="highlight"><pre><span></span><code><span class="nx">test</span><span class="p">(</span><span class="s1">&#39;Base Infrastructure creates Route53 and ACM&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">app</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">cdk</span><span class="p">.</span><span class="nx">App</span><span class="p">();</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">stack</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">BaseInfraStack</span><span class="p">(</span><span class="nx">app</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;TestStack&#39;</span><span class="p">);</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">template</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">Template</span><span class="p">.</span><span class="nx">fromStack</span><span class="p">(</span><span class="nx">stack</span><span class="p">);</span>
+
+<span class="w">  </span><span class="nx">template</span><span class="p">.</span><span class="nx">hasResourceProperties</span><span class="p">(</span><span class="s1">&#39;AWS::Route53::HostedZone&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">Name</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;sayaji.dev.&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div>
+<p><strong>Run tests:</strong>
+<div class="highlight"><pre><span></span><code><span class="c1"># Python tests</span>
+python<span class="w"> </span>-m<span class="w"> </span>unittest<span class="w"> </span>discover<span class="w"> </span>-s<span class="w"> </span>./test<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;test_*.py&quot;</span><span class="w"> </span>-v
+
+<span class="c1"># CDK tests</span>
+npm<span class="w"> </span><span class="nb">test</span>
+</code></pre></div></p>
+<h2 id="cicd-pipeline">CI/CD Pipeline</h2>
+<p>I use <strong>GitHub Actions</strong> with a 6-stage pipeline:</p>
+<div class="highlight"><pre><span></span><code>1. Setup       → Install dependencies (cached)
+2. Tests       → Run Python + CDK tests
+3. Plan        → CDK diff (show changes)
+4. Approval    → Manual approval for production
+5. Deploy      → Deploy to AWS
+6. Notify      → Send notifications
+</code></pre></div>
+<p><strong>Key features:</strong>
+- <strong>OIDC Authentication</strong> - No AWS credentials stored in GitHub!
+- <strong>PR Comments</strong> - Automatically comments CDK diff on pull requests
+- <strong>Manual Approval</strong> - Production deployments require approval</p>
+<div class="highlight"><pre><span></span><code><span class="nt">plan</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Configure AWS (OIDC)</span>
+<span class="w">      </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">aws-actions/configure-aws-credentials@v4</span>
+<span class="w">      </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">role-to-assume</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">arn:aws:iam::123456789:role/Github_Actions_Role</span>
+<span class="w">        </span><span class="nt">aws-region</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">us-east-1</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CDK Diff</span>
+<span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cdk diff --all</span>
+</code></pre></div>
+<p><a href="https://github.com/Sayaji911/sayaji-website-infra/blob/master/.github/workflows/main.yml">See the full CI/CD workflow on GitHub</a></p>
+<h2 id="lessons-learned">Lessons Learned</h2>
+<p>After building this infrastructure, here are my key takeaways:</p>
+<ol>
+<li><strong>Start Simple</strong> - I began with just S3 + CloudFront, then added features incrementally</li>
+<li><strong>Constructs are Powerful</strong> - Reusable constructs saved me hours of repetitive code</li>
+<li><strong>Test Early</strong> - Writing tests alongside infrastructure caught bugs before deployment</li>
+<li><strong>Security First</strong> - Block public S3 access, use OIDC, implement authorizers</li>
+<li><strong>Stack Composition</strong> - Separating base/backend/website stacks makes updates safer</li>
+<li><strong>Documentation Matters</strong> - AWS CDK docs are good, but real examples are better</li>
+</ol>
+<h2 id="whats-next">What's Next?</h2>
+<p>Now that the foundation is solid, here are some ideas I'm exploring:</p>
+<h3 id="1-add-more-websites">1. Add More Websites</h3>
+<p>The beauty of this pattern is reusability:</p>
+<div class="highlight"><pre><span></span><code><span class="ow">new</span><span class="w"> </span><span class="nx">PortfolioStack</span><span class="p">(</span><span class="nx">app</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;PortfolioStack&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="p">...</span><span class="nx">baseProps</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">siteDomain</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;portfolio.sayaji.dev&quot;</span><span class="p">,</span>
+<span class="p">});</span>
+</code></pre></div>
+<h3 id="2-monitoring-alerts">2. Monitoring &amp; Alerts</h3>
+<p>Add CloudWatch alarms for errors:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="nx">errorAlarm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">cloudwatch</span><span class="p">.</span><span class="nx">Alarm</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;LambdaErrors&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">metric</span><span class="o">:</span><span class="w"> </span><span class="kt">counterLambda.function.metricErrors</span><span class="p">(),</span>
+<span class="w">  </span><span class="nx">threshold</span><span class="o">:</span><span class="w"> </span><span class="kt">5</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">evaluationPeriods</span><span class="o">:</span><span class="w"> </span><span class="kt">1</span><span class="p">,</span>
+<span class="p">});</span>
+</code></pre></div>
+<h3 id="3-cost-optimization">3. Cost Optimization</h3>
+<ul>
+<li>Enable CloudFront caching with longer TTLs</li>
+<li>Use S3 Intelligent-Tiering</li>
+<li>Set DynamoDB to on-demand billing</li>
+</ul>
+<h3 id="4-waf-for-security">4. WAF for Security</h3>
+<p>Protect against DDoS and common attacks with AWS WAF rate limiting.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>Building this infrastructure taught me that <strong>Infrastructure as Code isn't just about automation—it's about reproducibility, testability, and maintainability</strong>.</p>
+<p>What started as a manual, error-prone process is now:</p>
+<p>✅ <strong>Reproducible</strong> - Deploy to any AWS account with <code>cdk deploy</code><br />
+✅ <strong>Scalable</strong> - Serverless architecture handles traffic spikes<br />
+✅ <strong>Secure</strong> - No public S3 access, API authentication, HTTPS everywhere<br />
+✅ <strong>Cost-effective</strong> - Pay only for what you use<br />
+✅ <strong>Testable</strong> - Comprehensive tests catch bugs before deployment<br />
+✅ <strong>Automated</strong> - CI/CD pipeline handles everything  </p>
+<p><strong>The complete code is available on <a href="https://github.com/Sayaji911/sayaji-website-infra">GitHub</a>.</strong></p>
+<p>If you're considering AWS CDK for your next project, I highly recommend it. The learning curve is worth it!</p>
+<hr />
+<p><em>Have questions or suggestions? Feel free to reach out or open an issue on GitHub!</em></p></div>
+        
+        
+    </div>
+
+    
+      <footer class="col-md-12 text-center">
+          
+          
+            <hr>
+            <p>
+            <small>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</small>
+            </p>
+          
+
+          
+          
+      </footer>
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="../../js/bootstrap-3.0.3.min.js"></script>
+
+    
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/highlight.min.js"></script>
+        
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    <script>var base_url = "../.."</script>
+    
+    <script src="../../js/base.js"></script>
+    <script src="../../search/main.js"></script>
+
+    <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+    </body>
+
+</html>

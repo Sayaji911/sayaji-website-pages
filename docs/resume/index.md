@@ -1,0 +1,87 @@
+---
+hide:
+  - navigation
+  - toc
+---
+
+# Sayaji Chavan
+
+**Senior Software Engineer | Cloud, Backend, DevOps**
+
+📍 Mumbai, Maharashtra, India  
+📧 [sayaji.dev@hotmail.com](mailto:sayaji.dev@hotmail.com) | 📞 [+91 98922 00636](tel:+919892200636)  
+🔗 [LinkedIn](https://www.linkedin.com/in/sayajic/) | [GitHub](https://github.com/Sayaji911) | [Blog](https://blog.sayaji.dev)
+
+---
+
+## Summary
+
+Seasoned Senior Software Engineer with over 6 years of experience specializing in DevOps and cloud-native platform development for the FinTech, AI, and Healthcare sectors. Proven expertise in designing, implementing, and managing end-to-end CI/CD pipelines using Jenkins and Argo CD. Architected and deployed secure, high-performance, and fault-tolerant cloud solutions on AWS, leading to a 40% reduction in operational overhead. Proficient in a comprehensive DevOps toolkit including Terraform, Kubernetes, Docker, and observability platforms like Prometheus and Grafana. AWS Certified (SAA-C03) with a strong commitment to automation and operational excellence.
+
+---
+
+## Work Experience
+
+### **Senior Software Engineer**
+**Everstek Technosoft Solutions** | *July 2024 - Present*
+
+- Designed, built, and maintained a robust CI/CD pipeline using Jenkins and Jenkinsfile to automate build, test, and deployment stages for a microservices architecture on AWS EKS, resulting in a 75% reduction in deployment time and enabling over 20 daily production releases with zero downtime.
+- Spearheaded the adoption of a GitOps workflow with Argo CD, managing over 50 applications and services. Automated and synchronized application deployments across development, staging, and production environments, leading to a 40% improvement in release consistency and reliability.
+- Managed and optimized cloud infrastructure on AWS, including services like EC2, S3, Lambda, and RDS, using Infrastructure as Code (IaC) with Terraform. This ensured scalable, cost-effective, and reproducible environments and reduced infrastructure provisioning time by 60%.
+- Established and configured comprehensive monitoring and alerting systems using Prometheus for metrics collection and Grafana for visualization, providing real-time insights into application performance and infrastructure health. This proactive approach decreased incident resolution time by 50%.
+- Automated infrastructure provisioning and configuration management with Ansible, creating playbooks to deploy and manage software on both EC2 and on-premise servers. This eliminated manual errors and reduced setup time for new services from hours to minutes.
+- Developed and maintained automation scripts in Bash and Python to streamline routine operational tasks, from log rotation to database backups, enhancing team productivity and efficiency by 30%.
+
+### **Senior Software Engineer**
+**Everstek Technosoft Solutions** | *Nov 2021 - July 2024*
+
+- Architected, deployed, and managed a secure, enterprise-grade ML Sandbox Environment on AWS using Terraform to handle sensitive customer PII, ensuring strict privacy and compliance standards for a major InsureTech enterprise.
+- Led the implementation of a Generative AI document processing service with a team of five, leveraging AWS Lambda, Bedrock, Textract, and SageMaker. This system processed over 100,000 documents daily with 98% accuracy, cutting manual review time by 85%.
+- Developed and maintained a high-throughput FinTech platform on AWS using a modern stack (ECS, RDS, OpenSearch). This platform supported over 1,000 active daily users and maintained 99.99% uptime.
+- Engineered an event-driven processing system using AWS SQS and Lambda to handle over 5,000 concurrent messages per minute with sub-second latency, enabling rapid and scalable feature development.
+- Modernized legacy healthcare APIs using FastAPI, which doubled response speed and reduced cloud costs by 40% through efficient architecture.
+- Spearheaded a technical Proof of Concept (POC) for a high-throughput event-driven architecture, successfully propagating bus tracking updates with sub-second latency across environments using CI/CD pipelines.
+- Improved deployment consistency and reduced infrastructure provisioning time by 60% by implementing multi-environment Infrastructure as Code (IaC) using Terraform.
+- Optimized cloud infrastructure costs by 35% through strategic resource allocation and the implementation of auto-scaling policies across AWS services, demonstrating a strong focus on cost management.
+- Enhanced the OpenSearch logging pipeline by implementing lifecycle policies, resulting in a 30% reduction in storage costs and improving data retention efficiency.
+- Conducted security assessments and remediated vulnerabilities within the AWS infrastructure to maintain a secure and compliant environment.
+- Demonstrated technical expertise across all project phases, from deploying containerized infrastructure with Terraform and designing APIs, to implementing efficient database schemas and developing scalable microservices.
+- Developed and deployed microservices for an EdTech Portal Admin Panel dashboard, building RESTful APIs that adhered to industry best practices and actively participating in Agile ceremonies.
+
+---
+
+## Skills
+
+| Category | Skills |
+| :--- | :--- |
+| **Cloud** | AWS, Azure, Google Cloud |
+| **Backend** | Python, Go, Node.js, FastAPI |
+| **DevOps** | Docker, Kubernetes (EKS), Terraform, AWS CDK, CI/CD, Git, Jenkins, Argo CD, GitOps, Ansible |
+| **Databases** | PostgreSQL, MongoDB, DynamoDB, OpenSearch |
+| **Observability** | Prometheus, Grafana, Site24*7, New Relic |
+| **Methodologies** | Agile Methodologies |
+| **Scripting** | Bash |
+
+---
+
+## Projects
+
+### **URL Shortener**
+Developed a FastAPI-based microservice with MongoDB, enabling the generation of over 10,000 short links per month.
+
+### **Shipment Tracking Bot**
+Created a WhatsApp bot that scrapes Ekart for real-time package tracking. Stack: Python, FastAPI, BeautifulSoup, Twilio.
+
+---
+
+## Certifications
+
+**AWS Certified Solutions Architect – Associate**  
+*Oct 2023*
+
+---
+
+## Education
+
+**Bachelor of Science in Information Technology**  
+University of Mumbai | *2016 - 2020*

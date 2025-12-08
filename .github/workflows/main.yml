@@ -24,10 +24,20 @@ jobs:
           role-session-name: github-actions
           aws-region: ap-south-1
 
-      - name: Sync all site directories to S3
+      - name: Sync site directories to S3 (skipping excluded ones)
         run: |
-          # Find all top-level directories and sync them to S3
-          for dir in $(find . -maxdepth 1 -type d -not -path '*/\.*' -not -path '.'); do
-            echo "Deploying ${dir#./} contents to s3://${dir#./} ..."
-            aws s3 sync "$dir" "s3://${dir#./}" --delete
+          EXCLUDE_DIRS=("docs") 
+ 
+          # Loop through directories
+          for dir in */ ; do
+            dir=${dir%/}  # remove trailing slash
+
+            # Check if directory is excluded
+            if [[ " ${EXCLUDE_DIRS[*]} " =~ " $dir " ]]; then
+              echo "⏩ Skipping $dir"
+              continue
+            fi
+
+            echo "🚀 Deploying $dir → s3://$dir/"
+            aws s3 sync "$dir" "s3://$dir" --delete
           done

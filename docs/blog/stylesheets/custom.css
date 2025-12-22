@@ -1,0 +1,315 @@
+/* Custom CSS to match blog landing page branding */
+:root {
+    --gradient-start: #5B7BFF;
+    --gradient-end: #7A42D9;
+    --bg-light: #ffffff;
+    --bg-dark: #0d1117;
+    --text-light: #24292f;
+    --text-dark: #c9d1d9;
+    --card-light: #ffffff;
+    --card-dark: #161b22;
+    --border-light: #d0d7de;
+    --border-dark: #30363d;
+    --code-bg-light: #f6f8fa;
+    --code-bg-dark: #161b22;
+}
+
+/* Dark mode */
+body.dark-mode {
+    background: var(--bg-dark) !important;
+    color: var(--text-dark) !important;
+}
+
+body.dark-mode .col-md-9,
+body.dark-mode .bs-sidebar,
+body.dark-mode .navbar-default {
+    background: var(--bg-dark) !important;
+    color: var(--text-dark) !important;
+}
+
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3,
+body.dark-mode h4,
+body.dark-mode h5,
+body.dark-mode h6 {
+    color: var(--text-dark) !important;
+    border-bottom-color: var(--border-dark) !important;
+}
+
+body.dark-mode pre {
+    background: var(--code-bg-dark) !important;
+    border-color: var(--border-dark) !important;
+}
+
+body.dark-mode code {
+    background: var(--code-bg-dark) !important;
+    color: var(--gradient-end) !important;
+}
+
+body.dark-mode table td {
+    border-bottom-color: var(--border-dark) !important;
+}
+
+body.dark-mode .bs-sidebar .nav>li>a {
+    color: var(--text-dark) !important;
+}
+
+/* Hide "Posts" navigation and Previous/Next links */
+.navbar-nav li:has(a[href="#posts"]),
+.navbar-nav li:has(a[title="Previous"]),
+.navbar-nav li:has(a[title="Next"]) {
+    display: none !important;
+}
+
+/* Also hide if they're direct links */
+a[href*="posts/"],
+a[title="Previous"],
+a[title="Next"] {
+    display: none !important;
+}
+
+/* Hide the Posts section in navbar */
+.navbar-nav>li:nth-child(2) {
+    display: none !important;
+}
+
+/* Dark mode toggle button */
+.dark-mode-toggle {
+    position: fixed;
+    top: 70px;
+    right: 20px;
+    background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    z-index: 1000;
+    transition: transform 0.2s;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.dark-mode-toggle:hover {
+    transform: scale(1.05);
+}
+
+/* Header customization */
+.navbar-default {
+    background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%) !important;
+    border: none !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-default .navbar-brand,
+.navbar-default .navbar-nav>li>a {
+    color: white !important;
+    font-weight: 500;
+}
+
+.navbar-default .navbar-nav>li>a:hover,
+.navbar-default .navbar-nav>li>a:focus {
+    color: rgba(255, 255, 255, 0.8) !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+}
+
+.navbar-default .navbar-brand:hover {
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Active nav item */
+.navbar-default .navbar-nav>.active>a,
+.navbar-default .navbar-nav>.active>a:hover,
+.navbar-default .navbar-nav>.active>a:focus {
+    background: rgba(255, 255, 255, 0.2) !important;
+    color: white !important;
+}
+
+/* Links */
+a {
+    color: var(--gradient-start);
+    transition: color 0.2s;
+}
+
+a:hover {
+    color: var(--gradient-end);
+}
+
+body.dark-mode a {
+    color: var(--gradient-end);
+}
+
+/* Headings */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: #1a1a1a;
+    font-weight: 600;
+}
+
+h1 {
+    border-bottom: 3px solid var(--gradient-start);
+    padding-bottom: 10px;
+}
+
+/* Code blocks */
+pre {
+    background: #f6f8fa;
+    border: 1px solid #e1e4e8;
+    border-radius: 6px;
+}
+
+code {
+    background: #f6f8fa;
+    color: var(--gradient-start);
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 0.9em;
+}
+
+pre code {
+    background: transparent;
+    color: inherit;
+    padding: 0;
+}
+
+/* Sidebar navigation */
+.bs-sidebar .nav>li>a {
+    color: #333;
+    border-left: 2px solid transparent;
+    transition: all 0.2s;
+}
+
+.bs-sidebar .nav>li>a:hover,
+.bs-sidebar .nav>li>a:focus {
+    color: var(--gradient-start);
+    background: rgba(91, 123, 255, 0.05);
+    border-left-color: var(--gradient-start);
+}
+
+.bs-sidebar .nav>.active>a,
+.bs-sidebar .nav>.active:hover>a,
+.bs-sidebar .nav>.active:focus>a {
+    color: var(--gradient-start);
+    background: rgba(91, 123, 255, 0.1);
+    border-left-color: var(--gradient-start);
+    font-weight: 600;
+}
+
+body.dark-mode .bs-sidebar .nav>li>a:hover,
+body.dark-mode .bs-sidebar .nav>li>a:focus {
+    background: rgba(122, 66, 217, 0.1);
+    border-left-color: var(--gradient-end);
+}
+
+/* Buttons */
+.btn-primary {
+    background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+    border: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, var(--gradient-end) 0%, var(--gradient-start) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(91, 123, 255, 0.3);
+}
+
+/* Footer */
+footer {
+    background: #f8f9fa;
+    border-top: 1px solid #e1e4e8;
+    padding: 30px 0;
+    margin-top: 60px;
+}
+
+body.dark-mode footer {
+    background: var(--card-dark);
+    border-top-color: var(--border-dark);
+}
+
+/* Improve readability */
+.col-md-9 {
+    font-size: 16px;
+    line-height: 1.7;
+}
+
+/* Admonitions */
+.admonition {
+    border-left: 4px solid var(--gradient-start);
+    background: rgba(91, 123, 255, 0.05);
+    border-radius: 4px;
+}
+
+.admonition-title {
+    background: rgba(91, 123, 255, 0.1);
+    color: var(--gradient-start);
+    font-weight: 600;
+}
+
+body.dark-mode .admonition {
+    background: rgba(122, 66, 217, 0.1);
+    border-left-color: var(--gradient-end);
+}
+
+/* Tables */
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px 0;
+}
+
+table thead {
+    background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+    color: white;
+}
+
+table th {
+    padding: 12px;
+    font-weight: 600;
+}
+
+table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #e1e4e8;
+}
+
+table tbody tr:hover {
+    background: rgba(91, 123, 255, 0.05);
+}
+
+/* Search box */
+#mkdocs-search-query {
+    border: 2px solid #e1e4e8;
+    border-radius: 6px;
+    padding: 8px 12px;
+    transition: border-color 0.2s;
+}
+
+#mkdocs-search-query:focus {
+    border-color: var(--gradient-start);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(91, 123, 255, 0.1);
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+    .navbar-default .navbar-brand {
+        font-size: 18px;
+    }
+
+    .col-md-9 {
+        font-size: 15px;
+    }
+
+    .dark-mode-toggle {
+        top: 60px;
+        right: 10px;
+        padding: 8px 16px;
+        font-size: 0.85rem;
+    }
+}

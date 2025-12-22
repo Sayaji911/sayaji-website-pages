@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sayaji Chavan | Senior DevOps & Backend Engineer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --text-main: #111827;
+            --text-light: #4b5563;
+            --accent: #2563eb;
+            --border: #e5e7eb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            color: var(--text-main);
+            line-height: 1.5;
+            background: #f3f4f6;
+            padding: 40px 20px;
+        }
+
+        .resume {
+            max-width: 850px;
+            margin: 0 auto;
+            background: white;
+            padding: 50px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+            margin-bottom: 5px;
+        }
+
+        .contact {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .contact a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        section {
+            margin-bottom: 25px;
+        }
+
+        h2 {
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--accent);
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 4px;
+            margin-bottom: 12px;
+        }
+
+        .exp-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            font-weight: 700;
+            font-size: 1.05rem;
+        }
+
+        .exp-sub {
+            display: flex;
+            justify-content: space-between;
+            font-style: italic;
+            color: var(--text-light);
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        ul {
+            margin-left: 18px;
+            margin-bottom: 15px;
+        }
+
+        li {
+            margin-bottom: 6px;
+            font-size: 0.95rem;
+            color: var(--text-main);
+        }
+
+        b {
+            color: #000;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: 140px 1fr;
+            gap: 10px;
+            font-size: 0.95rem;
+        }
+
+        .skills-label {
+            font-weight: 700;
+            color: var(--text-light);
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .resume {
+                box-shadow: none;
+                width: 100%;
+                padding: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="resume">
+        <header>
+            <h1>SAYAJI CHAVAN</h1>
+            <div class="contact">
+                <span>Mumbai, India</span>
+                <a href="mailto:sayaji.dev@hotmail.com">sayaji.dev@hotmail.com</a>
+                <span>+91 9892200636</span>
+                <a href="https://linkedin.com/in/sayaji">LinkedIn</a>
+                <a href="https://github.com/Sayaji911">GitHub</a>
+            </div>
+        </header>
+
+        <section>
+            <h2>Technical Skills</h2>
+            <div class="skills-grid">
+                <div class="skills-label">Languages:</div>
+                <div>Python (FastAPI, Django), TypeScript (CDK), Go, Bash, SQL (PostgreSQL)</div>
+                <div class="skills-label">Cloud & IaC:</div>
+                <div>AWS (EKS, Lambda, SQS, SageMaker, Bedrock), Terraform, AWS CDK, CloudFormation</div>
+                <div class="skills-label">DevOps:</div>
+                <div>Kubernetes, Docker, Helm, GitHub Actions (OIDC), CircleCI, Jenkins, Liquibase</div>
+                <div class="skills-label">Observability:</div>
+                <div>New Relic, CloudWatch, Prometheus, Grafana, Elasticsearch (ELK)</div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Experience</h2>
+
+            <div class="exp-header">
+                <span>Senior Software & DevOps Engineer</span>
+                <span>Jul 2024 – Present</span>
+            </div>
+            <div class="exp-sub">
+                <span>Everstek Technosoft Solutions</span>
+                <span>Mumbai, India</span>
+            </div>
+            <ul>
+                <li><b>SecOps & Identity:</b> Eliminated long-lived security credentials by implementing <b>OIDC (OpenID
+                        Connect)</b> for GitHub Actions, securing ECR/EKS deployment workflows.</li>
+                <li><b>Data Governance:</b> Architected a secure <b>AWS SageMaker</b> sandbox environment with VPC
+                    isolation and <b>IAM hardening</b> to enable Data Scientists to train models on sensitive PII data.
+                </li>
+                <li><b>AI Orchestration:</b> Spearheaded a Gen-AI document pipeline using <b>AWS Bedrock, Textract, and
+                        Lambda</b>, processing 100k+ records daily with automated summarization logic.</li>
+                <li><b>Infrastructure Strategy:</b> Reduced monthly cloud expenditure by <b>35%</b> through automated
+                    auto-scaling policies and migrating legacy services to <b>AWS CDK (TypeScript)</b>.</li>
+            </ul>
+
+            <div class="exp-header">
+                <span>Software Engineer (Module Lead)</span>
+                <span>Nov 2021 – Jul 2024</span>
+            </div>
+            <div class="exp-sub">
+                <span>Everestek Technosoft Solutions</span>
+                <span>Mumbai, India</span>
+            </div>
+            <ul>
+                <li><b>Microservices Architecture:</b> Owned end-to-end development of 7 microservices for a "SuperApp",
+                    implementing <b>FastAPI, SQS, and PostgreSQL</b> to handle high-concurrency traffic.</li>
+                <li><b>Distributed Systems:</b> Designed a real-time event-driven ingestion engine for <b>5,000+ live
+                        bus nodes</b> using the Observer pattern and <b>AWS SQS</b>, achieving sub-second data
+                    propagation.</li>
+                <li><b>CI/CD & Deployment:</b> Standardized production deployments for a US-based client using
+                    <b>Kubernetes (EKS) and Helm</b>, achieving 99.9% uptime across blue-green deployment cycles.
+                </li>
+                <li><b>Legacy Modernization:</b> Refactored a legacy healthcare platform into a microservices model,
+                    <b>doubling API throughput</b> and reducing infrastructure maintenance costs by 40%.
+                </li>
+                <li><b>Database Lifecycle:</b> Integrated <b>Liquibase</b> for automated schema migrations, ensuring
+                    zero-downtime database updates across Dev, UAT, and Production environments.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Selected Projects</h2>
+            <ul>
+                <li><b>Real-time Transit Tracker:</b> Built a serverless pipeline using <b>Lambda and Elasticsearch</b>
+                    to process live telemetry data, visualizing fleet movement on customized New Relic dashboards.</li>
+                <li><b>PII Masking Engine:</b> Developed a Python-based utility to anonymize customer data before
+                    propagation to lower environments, ensuring GDPR/SOC2 compliance for testing.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Education & Certifications</h2>
+            <div class="exp-header">
+                <span>AWS Certified Solutions Architect – Associate</span>
+                <span>Oct 2023</span>
+            </div>
+            <div class="exp-header" style="margin-top: 10px;">
+                <span>B.Sc. in Information Technology</span>
+                <span>2016 – 2020</span>
+            </div>
+            <div class="exp-sub">
+                <span>University of Mumbai</span>
+                <span>Mumbai, India</span>
+            </div>
+        </section>
+    </div>
+
+</body>
+
+</html>

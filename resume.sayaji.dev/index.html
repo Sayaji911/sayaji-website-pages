@@ -4,27 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sayaji - DevOps Engineer</title>
-    <meta name="description" content="DevOps Engineer specializing in Cloud, Backend, and Platform Engineering">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap"
-        rel="stylesheet">
+    <title>Sayaji Chavan | Senior DevOps & Backend Engineer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --gradient-start: #5B7BFF;
-            --gradient-end: #7A42D9;
-            --bg-light: #f8f9fa;
-            --bg-dark: #0d1117;
-            --text-light: #24292f;
-            --text-dark: #c9d1d9;
-            --card-light: white;
-            --card-dark: #161b22;
-            --border-light: #d0d7de;
-            --border-dark: #30363d;
-            --code-bg-light: #f6f8fa;
-            --code-bg-dark: #0d1117;
+            --text-main: #111827;
+            --text-light: #4b5563;
+            --accent: #2563eb;
+            --border: #e5e7eb;
         }
 
         * {
@@ -34,593 +21,226 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-light);
-            color: var(--text-light);
-            line-height: 1.6;
-            transition: background 0.3s, color 0.3s;
+            font-family: 'Inter', -apple-system, sans-serif;
+            color: var(--text-main);
+            line-height: 1.5;
+            background: #f3f4f6;
+            padding: 40px 20px;
         }
 
-        body.dark-mode {
-            background: var(--bg-dark);
-            color: var(--text-dark);
-        }
-
-        .resume-container {
-            max-width: 900px;
-            margin: 40px auto;
-            background: var(--card-light);
-            box-shadow: 0 0 40px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            overflow: hidden;
-            transition: background 0.3s, box-shadow 0.3s;
-        }
-
-        body.dark-mode .resume-container {
-            background: var(--card-dark);
-            box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
-        }
-
-        /* Terminal-style Header */
-        .header {
-            background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
-            color: white;
+        .resume {
+            max-width: 850px;
+            margin: 0 auto;
+            background: white;
             padding: 50px;
-            position: relative;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
 
-        .dark-mode-toggle {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            padding: 8px 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: background 0.2s;
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        .dark-mode-toggle:hover {
-            background: rgba(255, 255, 255, 0.3);
-        }
-
-        .terminal-prompt {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.9rem;
-            opacity: 0.9;
-            margin-bottom: 10px;
-        }
-
-        .name {
-            font-size: 2.8rem;
-            font-weight: 700;
-            margin-bottom: 8px;
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        .title {
-            font-size: 1.2rem;
-            font-weight: 400;
-            opacity: 0.95;
-            margin-bottom: 25px;
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        .contact-links {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.9rem;
-        }
-
-        .contact-links a {
-            color: white;
-            text-decoration: none;
-            transition: opacity 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .contact-links a:hover {
-            opacity: 0.8;
-        }
-
-        /* Content */
-        .content {
-            padding: 40px 50px;
-        }
-
-        .section {
-            margin-bottom: 35px;
-        }
-
-        .section-title {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: var(--gradient-start);
-            margin-bottom: 18px;
-            padding-bottom: 8px;
-            border-bottom: 2px solid var(--border-light);
-            font-family: 'JetBrains Mono', monospace;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        body.dark-mode .section-title {
-            border-bottom-color: var(--border-dark);
-        }
-
-        .section-icon {
-            font-size: 1.2rem;
-        }
-
-        /* Summary */
-        .summary {
-            font-size: 1rem;
-            line-height: 1.7;
-            color: var(--text-light);
-        }
-
-        body.dark-mode .summary {
-            color: var(--text-dark);
-        }
-
-        /* Skills - Terminal Style */
-        .skills-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-        }
-
-        .skill-category {
-            background: var(--code-bg-light);
-            padding: 15px;
-            border-radius: 6px;
-            border-left: 3px solid var(--gradient-start);
-            font-family: 'JetBrains Mono', monospace;
-            transition: background 0.3s;
-        }
-
-        body.dark-mode .skill-category {
-            background: var(--code-bg-dark);
-            border-left-color: var(--gradient-end);
-        }
-
-        .skill-category h3 {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--gradient-start);
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        body.dark-mode .skill-category h3 {
-            color: var(--gradient-end);
-        }
-
-        .skill-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-
-        .skill-tag {
-            background: rgba(91, 123, 255, 0.1);
-            color: var(--gradient-start);
-            padding: 4px 10px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: 500;
-            border: 1px solid rgba(91, 123, 255, 0.2);
-        }
-
-        body.dark-mode .skill-tag {
-            background: rgba(122, 66, 217, 0.2);
-            color: var(--gradient-end);
-            border-color: rgba(122, 66, 217, 0.3);
-        }
-
-        /* Experience */
-        .experience-item {
-            margin-bottom: 25px;
-            padding-left: 18px;
-            border-left: 2px solid var(--gradient-start);
-        }
-
-        body.dark-mode .experience-item {
-            border-left-color: var(--gradient-end);
-        }
-
-        .experience-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 8px;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .job-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--text-light);
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        body.dark-mode .job-title {
-            color: var(--text-dark);
-        }
-
-        .company {
-            font-size: 0.95rem;
-            color: var(--gradient-start);
-            font-weight: 500;
-        }
-
-        body.dark-mode .company {
-            color: var(--gradient-end);
-        }
-
-        .duration {
-            font-size: 0.85rem;
-            color: #6c757d;
-            font-weight: 500;
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        .experience-description ul {
-            margin-left: 20px;
-            margin-top: 8px;
-        }
-
-        .experience-description li {
-            margin-bottom: 6px;
-            color: var(--text-light);
-        }
-
-        body.dark-mode .experience-description li {
-            color: var(--text-dark);
-        }
-
-        /* Education & Certifications */
-        .education-item,
-        .cert-item {
-            margin-bottom: 15px;
-        }
-
-        .degree,
-        .cert-name {
-            font-size: 1.05rem;
-            font-weight: 600;
-            color: var(--text-light);
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        body.dark-mode .degree,
-        body.dark-mode .cert-name {
-            color: var(--text-dark);
-        }
-
-        .school,
-        .cert-issuer {
-            font-size: 0.95rem;
-            color: var(--gradient-start);
-            margin-top: 4px;
-        }
-
-        body.dark-mode .school,
-        body.dark-mode .cert-issuer {
-            color: var(--gradient-end);
-        }
-
-        .edu-year,
-        .cert-date {
-            font-size: 0.85rem;
-            color: #6c757d;
-            margin-top: 4px;
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        /* Footer */
-        .footer {
-            background: var(--code-bg-light);
-            padding: 25px 50px;
+        header {
             text-align: center;
-            color: #6c757d;
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+            margin-bottom: 5px;
+        }
+
+        .contact {
             font-size: 0.9rem;
-            border-top: 1px solid var(--border-light);
-            transition: background 0.3s, border-color 0.3s;
-        }
-
-        body.dark-mode .footer {
-            background: var(--code-bg-dark);
-            border-top-color: var(--border-dark);
-        }
-
-        .footer-links {
+            color: var(--text-light);
             display: flex;
             justify-content: center;
-            gap: 20px;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .contact a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        section {
+            margin-bottom: 25px;
+        }
+
+        h2 {
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--accent);
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 4px;
+            margin-bottom: 12px;
+        }
+
+        .exp-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            font-weight: 700;
+            font-size: 1.05rem;
+        }
+
+        .exp-sub {
+            display: flex;
+            justify-content: space-between;
+            font-style: italic;
+            color: var(--text-light);
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        ul {
+            margin-left: 18px;
             margin-bottom: 15px;
         }
 
-        .footer-links a {
-            color: var(--gradient-start);
-            text-decoration: none;
-            transition: color 0.2s;
-            font-family: 'JetBrains Mono', monospace;
+        li {
+            margin-bottom: 6px;
+            font-size: 0.95rem;
+            color: var(--text-main);
         }
 
-        body.dark-mode .footer-links a {
-            color: var(--gradient-end);
+        b {
+            color: #000;
         }
 
-        .footer-links a:hover {
-            opacity: 0.7;
+        .skills-grid {
+            display: grid;
+            grid-template-columns: 140px 1fr;
+            gap: 10px;
+            font-size: 0.95rem;
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            .resume-container {
-                margin: 20px;
-            }
-
-            .header {
-                padding: 40px 30px;
-            }
-
-            .name {
-                font-size: 2.2rem;
-            }
-
-            .title {
-                font-size: 1.1rem;
-            }
-
-            .content {
-                padding: 30px 25px;
-            }
-
-            .footer {
-                padding: 25px 20px;
-            }
-
-            .experience-header {
-                flex-direction: column;
-            }
-
-            .dark-mode-toggle {
-                position: static;
-                margin-bottom: 20px;
-            }
+        .skills-label {
+            font-weight: 700;
+            color: var(--text-light);
         }
 
         @media print {
             body {
                 background: white;
+                padding: 0;
             }
 
-            .resume-container {
+            .resume {
                 box-shadow: none;
-                margin: 0;
-            }
-
-            .header {
-                background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
-            }
-
-            .dark-mode-toggle,
-            .footer-links {
-                display: none;
+                width: 100%;
+                padding: 0;
             }
         }
     </style>
 </head>
 
 <body>
-    <div class="resume-container">
-        <!-- Header -->
-        <div class="header">
-            <button class="dark-mode-toggle" onclick="toggleDarkMode()">🌙 dark</button>
-            <div class="terminal-prompt">$ whoami</div>
-            <h1 class="name">sayaji</h1>
-            <p class="title">devops-engineer --cloud --backend --platform</p>
-            <div class="contact-links">
-                <a href="mailto:hello@sayaji.dev">📧 hello@sayaji.dev</a>
-                <a href="https://github.com/Sayaji911">💻 github.com/Sayaji911</a>
-                <a href="https://linkedin.com/in/sayaji">🔗 linkedin.com/in/sayaji</a>
-                <a href="https://sayaji.dev">🌐 sayaji.dev</a>
+
+    <div class="resume">
+        <header>
+            <h1>SAYAJI CHAVAN</h1>
+            <div class="contact">
+                <span>Mumbai, India</span>
+                <a href="mailto:sayaji.dev@hotmail.com">sayaji.dev@hotmail.com</a>
+                <span>+91 9892200636</span>
+                <a href="https://linkedin.com/in/sayaji">LinkedIn</a>
+                <a href="https://github.com/Sayaji911">GitHub</a>
             </div>
-        </div>
+        </header>
 
-        <!-- Main Content -->
-        <div class="content">
-            <!-- Summary -->
-            <div class="section">
-                <h2 class="section-title">
-                    <span class="section-icon">$</span>
-                    cat about.txt
-                </h2>
-                <p class="summary">
-                    DevOps Engineer with 6+ years building cloud-native infrastructure and CI/CD pipelines.
-                    Specialized in AWS, Kubernetes, Terraform, and Infrastructure as Code.
-                    Passionate about automation, observability, and building scalable systems that enable teams to ship
-                    faster.
-                </p>
+        <section>
+            <h2>Technical Skills</h2>
+            <div class="skills-grid">
+                <div class="skills-label">Languages:</div>
+                <div>Python (FastAPI, Django), TypeScript (CDK), Go, Bash, SQL (PostgreSQL)</div>
+                <div class="skills-label">Cloud & IaC:</div>
+                <div>AWS (EKS, Lambda, SQS, SageMaker, Bedrock), Terraform, AWS CDK, CloudFormation</div>
+                <div class="skills-label">DevOps:</div>
+                <div>Kubernetes, Docker, Helm, GitHub Actions (OIDC), CircleCI, Jenkins, Liquibase</div>
+                <div class="skills-label">Observability:</div>
+                <div>New Relic, CloudWatch, Prometheus, Grafana, Elasticsearch (ELK)</div>
             </div>
+        </section>
 
-            <!-- Skills -->
-            <div class="section">
-                <h2 class="section-title">
-                    <span class="section-icon">$</span>
-                    ls skills/
-                </h2>
-                <div class="skills-grid">
-                    <div class="skill-category">
-                        <h3>☁️ Cloud & IaC</h3>
-                        <div class="skill-tags">
-                            <span class="skill-tag">AWS</span>
-                            <span class="skill-tag">Terraform</span>
-                            <span class="skill-tag">CDK</span>
-                            <span class="skill-tag">CloudFormation</span>
-                        </div>
-                    </div>
-                    <div class="skill-category">
-                        <h3>🚀 DevOps & CI/CD</h3>
-                        <div class="skill-tags">
-                            <span class="skill-tag">GitHub Actions</span>
-                            <span class="skill-tag">Jenkins</span>
-                            <span class="skill-tag">Argo CD</span>
-                            <span class="skill-tag">GitOps</span>
-                        </div>
-                    </div>
-                    <div class="skill-category">
-                        <h3>🐳 Containers</h3>
-                        <div class="skill-tags">
-                            <span class="skill-tag">Docker</span>
-                            <span class="skill-tag">Kubernetes</span>
-                            <span class="skill-tag">EKS</span>
-                            <span class="skill-tag">Helm</span>
-                        </div>
-                    </div>
-                    <div class="skill-category">
-                        <h3>💻 Programming</h3>
-                        <div class="skill-tags">
-                            <span class="skill-tag">Python</span>
-                            <span class="skill-tag">Go</span>
-                            <span class="skill-tag">Bash</span>
-                            <span class="skill-tag">TypeScript</span>
-                        </div>
-                    </div>
-                    <div class="skill-category">
-                        <h3>📊 Observability</h3>
-                        <div class="skill-tags">
-                            <span class="skill-tag">Prometheus</span>
-                            <span class="skill-tag">Grafana</span>
-                            <span class="skill-tag">CloudWatch</span>
-                            <span class="skill-tag">New Relic</span>
-                        </div>
-                    </div>
-                    <div class="skill-category">
-                        <h3>🗄️ Databases</h3>
-                        <div class="skill-tags">
-                            <span class="skill-tag">PostgreSQL</span>
-                            <span class="skill-tag">DynamoDB</span>
-                            <span class="skill-tag">Redis</span>
-                            <span class="skill-tag">MongoDB</span>
-                        </div>
-                    </div>
-                </div>
+        <section>
+            <h2>Experience</h2>
+
+            <div class="exp-header">
+                <span>Senior Software & DevOps Engineer</span>
+                <span>Jul 2024 – Present</span>
             </div>
-
-            <!-- Experience -->
-            <div class="section">
-                <h2 class="section-title">
-                    <span class="section-icon">$</span>
-                    cat experience.log
-                </h2>
-
-                <div class="experience-item">
-                    <div class="experience-header">
-                        <div>
-                            <div class="job-title">Senior Software Engineer</div>
-                            <div class="company">Everstek Technosoft Solutions</div>
-                        </div>
-                        <div class="duration">Jul 2024 - Present</div>
-                    </div>
-                    <div class="experience-description">
-                        <ul>
-                            <li>Built CI/CD pipeline with Jenkins reducing deployment time by 75%</li>
-                            <li>Managed 50+ applications using GitOps with Argo CD</li>
-                            <li>Automated infrastructure provisioning with Terraform (60% faster)</li>
-                            <li>Implemented Prometheus + Grafana monitoring (50% faster incident resolution)</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="experience-item">
-                    <div class="experience-header">
-                        <div>
-                            <div class="job-title">Software Engineer</div>
-                            <div class="company">Everstek Technosoft Solutions</div>
-                        </div>
-                        <div class="duration">Nov 2021 - Jul 2024</div>
-                    </div>
-                    <div class="experience-description">
-                        <ul>
-                            <li>Architected secure ML Sandbox on AWS with Terraform</li>
-                            <li>Built GenAI document processing (100k+ docs/day, 98% accuracy)</li>
-                            <li>Developed FinTech platform on AWS (99.99% uptime)</li>
-                            <li>Reduced cloud costs by 35% through optimization</li>
-                        </ul>
-                    </div>
-                </div>
+            <div class="exp-sub">
+                <span>Everstek Technosoft Solutions</span>
+                <span>Mumbai, India</span>
             </div>
+            <ul>
+                <li><b>SecOps & Identity:</b> Eliminated long-lived security credentials by implementing <b>OIDC (OpenID
+                        Connect)</b> for GitHub Actions, securing ECR/EKS deployment workflows.</li>
+                <li><b>Data Governance:</b> Architected a secure <b>AWS SageMaker</b> sandbox environment with VPC
+                    isolation and <b>IAM hardening</b> to enable Data Scientists to train models on sensitive PII data.
+                </li>
+                <li><b>AI Orchestration:</b> Spearheaded a Gen-AI document pipeline using <b>AWS Bedrock, Textract, and
+                        Lambda</b>, processing 100k+ records daily with automated summarization logic.</li>
+                <li><b>Infrastructure Strategy:</b> Reduced monthly cloud expenditure by <b>35%</b> through automated
+                    auto-scaling policies and migrating legacy services to <b>AWS CDK (TypeScript)</b>.</li>
+            </ul>
 
-            <!-- Certifications -->
-            <div class="section">
-                <h2 class="section-title">
-                    <span class="section-icon">$</span>
-                    cat certs.txt
-                </h2>
-
-                <div class="cert-item">
-                    <div class="cert-name">AWS Certified Solutions Architect – Associate</div>
-                    <div class="cert-issuer">Amazon Web Services</div>
-                    <div class="cert-date">Oct 2023</div>
-                </div>
+            <div class="exp-header">
+                <span>Software Engineer (Module Lead)</span>
+                <span>Nov 2021 – Jul 2024</span>
             </div>
-
-            <!-- Education -->
-            <div class="section">
-                <h2 class="section-title">
-                    <span class="section-icon">$</span>
-                    cat education.txt
-                </h2>
-
-                <div class="education-item">
-                    <div class="degree">B.Sc. Information Technology</div>
-                    <div class="school">University of Mumbai</div>
-                    <div class="edu-year">2016 - 2020</div>
-                </div>
+            <div class="exp-sub">
+                <span>Everestek Technosoft Solutions</span>
+                <span>Mumbai, India</span>
             </div>
-        </div>
+            <ul>
+                <li><b>Microservices Architecture:</b> Owned end-to-end development of 7 microservices for a "SuperApp",
+                    implementing <b>FastAPI, SQS, and PostgreSQL</b> to handle high-concurrency traffic.</li>
+                <li><b>Distributed Systems:</b> Designed a real-time event-driven ingestion engine for <b>5,000+ live
+                        bus nodes</b> using the Observer pattern and <b>AWS SQS</b>, achieving sub-second data
+                    propagation.</li>
+                <li><b>CI/CD & Deployment:</b> Standardized production deployments for a US-based client using
+                    <b>Kubernetes (EKS) and Helm</b>, achieving 99.9% uptime across blue-green deployment cycles.
+                </li>
+                <li><b>Legacy Modernization:</b> Refactored a legacy healthcare platform into a microservices model,
+                    <b>doubling API throughput</b> and reducing infrastructure maintenance costs by 40%.
+                </li>
+                <li><b>Database Lifecycle:</b> Integrated <b>Liquibase</b> for automated schema migrations, ensuring
+                    zero-downtime database updates across Dev, UAT, and Production environments.</li>
+            </ul>
+        </section>
 
-        <!-- Footer -->
-        <div class="footer">
-            <div class="footer-links">
-                <a href="https://sayaji.dev">home</a>
-                <a href="https://blog.sayaji.dev">blog</a>
-                <a href="https://github.com/Sayaji911">github</a>
-                <a href="https://linkedin.com/in/sayaji">linkedin</a>
+        <section>
+            <h2>Selected Projects</h2>
+            <ul>
+                <li><b>Real-time Transit Tracker:</b> Built a serverless pipeline using <b>Lambda and Elasticsearch</b>
+                    to process live telemetry data, visualizing fleet movement on customized New Relic dashboards.</li>
+                <li><b>PII Masking Engine:</b> Developed a Python-based utility to anonymize customer data before
+                    propagation to lower environments, ensuring GDPR/SOC2 compliance for testing.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Education & Certifications</h2>
+            <div class="exp-header">
+                <span>AWS Certified Solutions Architect – Associate</span>
+                <span>Oct 2023</span>
             </div>
-            <p>© 2025 sayaji | built with ❤️ and ☕</p>
-        </div>
+            <div class="exp-header" style="margin-top: 10px;">
+                <span>B.Sc. in Information Technology</span>
+                <span>2016 – 2020</span>
+            </div>
+            <div class="exp-sub">
+                <span>University of Mumbai</span>
+                <span>Mumbai, India</span>
+            </div>
+        </section>
     </div>
 
-    <script>
-        // Dark mode toggle
-        function toggleDarkMode() {
-            document.body.classList.toggle('dark-mode');
-            const isDark = document.body.classList.contains('dark-mode');
-            localStorage.setItem('darkMode', isDark);
-            document.querySelector('.dark-mode-toggle').textContent = isDark ? '☀️ light' : '🌙 dark';
-        }
-
-        // Load dark mode preference
-        if (localStorage.getItem('darkMode') === 'true') {
-            document.body.classList.add('dark-mode');
-            document.querySelector('.dark-mode-toggle').textContent = '☀️ light';
-        }
-    </script>
 </body>
 
 </html>

@@ -224,19 +224,7 @@ new dynamodb.Table(this, "CounterTable", {
 
 ## Challenges I Faced
 
-### 1. CloudFront Origin Access Control (OAC)
-
-Initially, I used the deprecated Origin Access Identity (OAI). Switching to OAC took some trial and error:
-
-```typescript
-// ❌ Old way (deprecated)
-origins.S3Origin.withOriginAccessIdentity(bucket)
-
-// ✅ New way
-origins.S3BucketOrigin.withOriginAccessControl(bucket)
-```
-
-### 2. Cross-Stack References
+### 1. Cross-Stack References
 
 Passing values between stacks required enabling `crossRegionReferences`:
 
@@ -246,7 +234,7 @@ new BaseInfraStack(app, "BaseInfraStack", {
 });
 ```
 
-### 3. API Gateway Authorizer
+### 2. API Gateway Authorizer
 
 Setting up the Lambda authorizer was tricky. The authorizer must return an IAM policy:
 
@@ -264,7 +252,7 @@ def generate_policy(principal_id, effect, resource):
         },
     }
 ```
-### 4. GitHub OIDC
+### 3. GitHub OIDC
 
 Setting up GitHub OIDC was a bit tricky. I had to enable the `oidc` provider in the `github-actions.yml` file:
 
@@ -313,7 +301,7 @@ I use **GitHub Actions** with a six-stage pipeline:
 
 
 **Key features:**
-- **OIDC Authentication** - No AWS credentials stored in GitHub!
+- **OIDC Authentication** - No AWS credentials stored in GitHub! 
 - **PR Comments** - Automatically comments CDK diff on pull requests
 - **Manual Approval** - Production deployments require approval
 

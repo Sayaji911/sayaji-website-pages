@@ -10,20 +10,21 @@ image: https://picsum.photos/seed/cloud/800/400
 
 # From Manual AWS Setup to Infrastructure as Code: My CDK Journey
 
-Last week, I wanted to host a static website (like a blog or portfolio) on AWS. At first, I set up everything manually—creating S3 buckets, CloudFront distributions, and Route53 DNS records through the AWS console.
 
-It worked, but I quickly ran into a problem: **the process was tedious and not reproducible**.
+Last week, I wanted to host a static website on AWS. I started by creating S3 buckets, CloudFront distributions, and Route53 basically everything manually.
 
-For example, if I wanted to host `blog.sayaji.dev`, I would need to:
 
-- Create an S3 bucket for storage
-- Set up a CloudFront distribution for content delivery
+It worked, but it was tedious and not reproducible.
+
+For every new domain I need to host, I would need to:
+
+- Create an S3 bucket.
+- Set up a CloudFront distribution.
 - Configure DNS records in Route53
-- **Repeat the same steps again for every new domain**
 
-That's when I realized: **This needs Infrastructure as Code (IaC)**.
+But this reproducibility problem can be solved with IaC.
 
-I considered a few options: Terraform, Pulumi, or AWS CDK. I decided to go with **AWS CDK**, thinking it would be a great learning experience.
+I considered a few options: Terraform, Pulumi, or AWS CDK. I decided to go with **AWS CDK**. I thought it would be a great learning experience.
 
 ## What We're Building
 
@@ -37,8 +38,8 @@ Our serverless infrastructure includes:
 - **CloudFront** - Global CDN for low-latency content delivery with SSL
 - **Route 53** - DNS management for custom domains
 - **API Gateway + Lambda** - Dynamic features (visitor counter)
-- **DynamoDB** - Data persistence
-- **Secrets Manager** - Secure API authentication
+- **DynamoDB** - Store the visitor count
+- **Secrets Manager** - Store the API secret
 
 **The Flow:**
 1. User visits `resume.sayaji.dev`
@@ -52,7 +53,7 @@ Our serverless infrastructure includes:
 
 ## Why AWS CDK?
 
-Before diving into code, let me explain why I chose CDK over other IaC tools.
+I think CDK is new territory for me. I have used other IaC tools like Terraform and I liked them. But I wanted to try something new.
 
 **CDK uses three core concepts:**
 
@@ -60,14 +61,16 @@ Before diving into code, let me explain why I chose CDK over other IaC tools.
 - **Stack** - A logical deployment unit containing multiple constructs
 - **App** - The root container for all your stacks
 
-I like to think of constructs as **Lego bricks** single, reusable pieces that create one or more AWS resources.
+I like to think of constructs as **Lego bricks**—single, reusable pieces that create one or more AWS resources.
 
 For example:
 - `s3.Bucket` → creates an AWS S3 bucket
 - `cloudfront.Distribution` → creates a CloudFront distribution
 - `route53.ARecord` → creates a DNS record
 
-The beauty? You write TypeScript instead of YAML. Here's a simple example:
+As a developer turned DevOps engineer, I find it easier to write code than YAML.
+
+Below is a small example of creating an S3 bucket using CDK.
 
 ```typescript
 new s3.Bucket(scope, 'WebsiteBucket', {
@@ -79,7 +82,8 @@ new s3.Bucket(scope, 'WebsiteBucket', {
 
 ## The Pattern: Stack Composition
 
-Instead of one monolithic stack, I separated concerns into three stacks:
+Instead of creating one giant stack, I split the stack into multiple logical stacks.
+
 
 ```typescript
 const app = new cdk.App();
@@ -133,11 +137,10 @@ export class WebsiteBucket extends Construct {
 }
 ```
 
-**Key decision:** Block all public access. CloudFront accesses S3 using Origin Access Control (OAC), not public URLs.
 
 ### 2. CloudFront Distribution (Multi-Origin)
 
-This was the trickiest part. I needed CloudFront to serve:
+This was the challenging part
 - Static content from S3 (default behavior)
 - API requests to API Gateway (path `/count`)
 
@@ -174,8 +177,9 @@ export class WebsiteDistribution extends Construct {
   }
 }
 ```
+**How do I stop direct API access?**
 
-**The magic:** CloudFront automatically adds the `x-cf-secret` header to API requests, which the Lambda authorizer validates. This prevents direct API access!
+I added `x-cf-secret` header to API requests injected by CloudFront, which the Lambda authorizer validates. This prevents direct API access! 
 
 ### 3. Lambda + DynamoDB (Visitor Counter)
 
@@ -206,6 +210,9 @@ def handler(event, context):
         "body": json.dumps({"ip": src_ip, "unique_visitors": total})
     }
 ```
+
+I know, I know, storing IP addresses is not the best way to do it, but it works for now (maybe Flask + SQLite in WAL mode. In-memory IP address rate limiting), but this is for the future.
+
 
 **DynamoDB table:**
 ```typescript
@@ -257,12 +264,19 @@ def generate_policy(principal_id, effect, resource):
         },
     }
 ```
+### 4. GitHub OIDC
+
+Setting up GitHub OIDC was a bit tricky. I had to enable the `oidc` provider in the `github-actions.yml` file:
+
+```yaml
+permissions:
+  id-token: write
+  contents: read
+```
 
 ## Testing Strategy
 
-I use **two types of tests**:
-
-### 1. Python Unit Tests (Lambda Functions)
+###  Python Unit Tests (Lambda Functions)
 
 ```python
 class CounterLambdaTest(unittest.TestCase):
@@ -278,122 +292,65 @@ class CounterLambdaTest(unittest.TestCase):
         self.assertIn("unique_visitors", json.loads(response["body"]))
 ```
 
-### 2. CDK Snapshot Tests (Infrastructure)
-
-```typescript
-test('Base Infrastructure creates Route53 and ACM', () => {
-  const app = new cdk.App();
-  const stack = new BaseInfraStack(app, 'TestStack');
-  const template = Template.fromStack(stack);
-  
-  template.hasResourceProperties('AWS::Route53::HostedZone', {
-    Name: 'sayaji.dev.',
-  });
-});
-```
 
 **Run tests:**
 ```bash
 # Python tests
 python -m unittest discover -s ./test -p "test_*.py" -v
-
-# CDK tests
-npm test
 ```
 
-## CI/CD Pipeline
+## CI/CD Pipeline 
 
-I use **GitHub Actions** with a 6-stage pipeline:
+I use **GitHub Actions** with a six-stage pipeline:
 
-```
+
 1. Setup       → Install dependencies (cached)
 2. Tests       → Run Python + CDK tests
 3. Plan        → CDK diff (show changes)
 4. Approval    → Manual approval for production
 5. Deploy      → Deploy to AWS
 6. Notify      → Send notifications
-```
+
 
 **Key features:**
 - **OIDC Authentication** - No AWS credentials stored in GitHub!
 - **PR Comments** - Automatically comments CDK diff on pull requests
 - **Manual Approval** - Production deployments require approval
 
-```yaml
-plan:
-  steps:
-    - name: Configure AWS (OIDC)
-      uses: aws-actions/configure-aws-credentials@v4
-      with:
-        role-to-assume: arn:aws:iam::123456789:role/Github_Actions_Role
-        aws-region: us-east-1
-    
-    - name: CDK Diff
-      run: cdk diff --all
-```
-
-[See the full CI/CD workflow on GitHub](https://github.com/Sayaji911/sayaji-website-infra/blob/master/.github/workflows/main.yml)
-
 ## Lessons Learned
 
 After building this infrastructure, here are my key takeaways:
 
-1. **Start Simple** - I began with just S3 + CloudFront, then added features incrementally
+1. **Start Simple** - Just start and start small and fast. Don't overcomplicate things.
+
 2. **Constructs are Powerful** - Reusable constructs saved me hours of repetitive code
-3. **Test Early** - Writing tests alongside infrastructure caught bugs before deployment
-4. **Security First** - Block public S3 access, use OIDC, implement authorizers
-5. **Stack Composition** - Separating base/backend/website stacks makes updates safer
-6. **Documentation Matters** - AWS CDK docs are good, but real examples are better
+
+3. **Security First** - Block public S3 access, use OIDC, implement authorizers
+
+4. **Stack Composition** - Separating base/backend/website stacks makes updates safer
+
+5. **Documentation Matters** - AWS CDK docs are good, but real examples are better
 
 ## What's Next?
 
 Now that the foundation is solid, here are some ideas I'm exploring:
 
-### 1. Add More Websites
 
-The beauty of this pattern is reusability:
+### 1. Monitoring & Alerts
 
-```typescript
-new PortfolioStack(app, "PortfolioStack", {
-  ...baseProps,
-  siteDomain: "portfolio.sayaji.dev",
-});
-```
+We can use New Relic or Datadog to monitor our infrastructure, like the Lambda functions, CloudFront, S3, and DynamoDB.
 
-### 2. Monitoring & Alerts
+### 2. Cost Optimization
+It costs me less than $5 per month to run this infrastructure.
 
-Add CloudWatch alarms for errors:
+### 3. WAF for Security
 
-```typescript
-const errorAlarm = new cloudwatch.Alarm(this, 'LambdaErrors', {
-  metric: counterLambda.function.metricErrors(),
-  threshold: 5,
-  evaluationPeriods: 1,
-});
-```
-
-### 3. Cost Optimization
-
-- Enable CloudFront caching with longer TTLs
-- Use S3 Intelligent-Tiering
-- Set DynamoDB to on-demand billing
-
-### 4. WAF for Security
-
-Protect against DDoS and common attacks with AWS WAF rate limiting.
+Protect against DDoS and common attacks with AWS WAF rate limiting. (but this is expensive!)
 
 ## Conclusion
 
-Building this infrastructure taught me that **Infrastructure as Code isn't just about automation—it's about reproducibility, testability, and maintainability**.
-
-What started as a manual, error-prone process is now:
-
-✅ **Reproducible** - Deploy to any AWS account with `cdk deploy`  
-✅ **Scalable** - Serverless architecture handles traffic spikes  
-✅ **Secure** - No public S3 access, API authentication, HTTPS everywhere  
-✅ **Cost-effective** - Pay only for what you use  
-✅ **Testable** - Comprehensive tests catch bugs before deployment  
-✅ **Automated** - CI/CD pipeline handles everything  
+It was fun doing this, and I learned a lot about CDK and AWS. As a developer, I find CDK fluid and feels like I am slipping into a familiar pair of shoes. We get to use constructs, functions, loops and variables and suddenly infrastructure stops feeling like configuration files and starts feeling like code. 
+ 
 
 **The complete code is available on [GitHub](https://github.com/Sayaji911/sayaji-website-infra).**
 

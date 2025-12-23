@@ -135,20 +135,19 @@
                 <li class="third-level"><a href="#1-cloudfront-origin-access-control-oac">1. CloudFront Origin Access Control (OAC)</a></li>
                 <li class="third-level"><a href="#2-cross-stack-references">2. Cross-Stack References</a></li>
                 <li class="third-level"><a href="#3-api-gateway-authorizer">3. API Gateway Authorizer</a></li>
+                <li class="third-level"><a href="#4-github-oidc">4. GitHub OIDC</a></li>
             <li class="second-level"><a href="#testing-strategy">Testing Strategy</a></li>
                 
-                <li class="third-level"><a href="#1-python-unit-tests-lambda-functions">1. Python Unit Tests (Lambda Functions)</a></li>
-                <li class="third-level"><a href="#2-cdk-snapshot-tests-infrastructure">2. CDK Snapshot Tests (Infrastructure)</a></li>
+                <li class="third-level"><a href="#python-unit-tests-lambda-functions">Python Unit Tests (Lambda Functions)</a></li>
             <li class="second-level"><a href="#cicd-pipeline">CI/CD Pipeline</a></li>
                 
             <li class="second-level"><a href="#lessons-learned">Lessons Learned</a></li>
                 
             <li class="second-level"><a href="#whats-next">What's Next?</a></li>
                 
-                <li class="third-level"><a href="#1-add-more-websites">1. Add More Websites</a></li>
-                <li class="third-level"><a href="#2-monitoring-alerts">2. Monitoring &amp; Alerts</a></li>
-                <li class="third-level"><a href="#3-cost-optimization">3. Cost Optimization</a></li>
-                <li class="third-level"><a href="#4-waf-for-security">4. WAF for Security</a></li>
+                <li class="third-level"><a href="#1-monitoring-alerts">1. Monitoring &amp; Alerts</a></li>
+                <li class="third-level"><a href="#2-cost-optimization">2. Cost Optimization</a></li>
+                <li class="third-level"><a href="#3-waf-for-security">3. WAF for Security</a></li>
             <li class="second-level"><a href="#conclusion">Conclusion</a></li>
                 
     </ul>
@@ -156,17 +155,16 @@
         <div class="col-md-9" role="main">
 
 <h1 id="from-manual-aws-setup-to-infrastructure-as-code-my-cdk-journey">From Manual AWS Setup to Infrastructure as Code: My CDK Journey</h1>
-<p>Last week, I wanted to host a static website (like a blog or portfolio) on AWS. At first, I set up everything manually—creating S3 buckets, CloudFront distributions, and Route53 DNS records through the AWS console.</p>
-<p>It worked, but I quickly ran into a problem: <strong>the process was tedious and not reproducible</strong>.</p>
-<p>For example, if I wanted to host <code>blog.sayaji.dev</code>, I would need to:</p>
+<p>Last week, I wanted to host a static website on AWS. I started by creating S3 buckets, CloudFront distributions, and Route53 basically everything manually.</p>
+<p>It worked, but it was tedious and not reproducible.</p>
+<p>For every new domain I need to host, I would need to:</p>
 <ul>
-<li>Create an S3 bucket for storage</li>
-<li>Set up a CloudFront distribution for content delivery</li>
+<li>Create an S3 bucket.</li>
+<li>Set up a CloudFront distribution.</li>
 <li>Configure DNS records in Route53</li>
-<li><strong>Repeat the same steps again for every new domain</strong></li>
 </ul>
-<p>That's when I realized: <strong>This needs Infrastructure as Code (IaC)</strong>.</p>
-<p>I considered a few options: Terraform, Pulumi, or AWS CDK. I decided to go with <strong>AWS CDK</strong>, thinking it would be a great learning experience.</p>
+<p>But this reproducibility problem can be solved with IaC.</p>
+<p>I considered a few options: Terraform, Pulumi, or AWS CDK. I decided to go with <strong>AWS CDK</strong>. I thought it would be a great learning experience.</p>
 <h2 id="what-were-building">What We're Building</h2>
 <p>Here's the architecture we'll create with CDK:</p>
 <p><img alt="Architecture Diagram" src="../assets/Resume_Wesbite.drawio.svg" /></p>
@@ -176,8 +174,8 @@
 <li><strong>CloudFront</strong> - Global CDN for low-latency content delivery with SSL</li>
 <li><strong>Route 53</strong> - DNS management for custom domains</li>
 <li><strong>API Gateway + Lambda</strong> - Dynamic features (visitor counter)</li>
-<li><strong>DynamoDB</strong> - Data persistence</li>
-<li><strong>Secrets Manager</strong> - Secure API authentication</li>
+<li><strong>DynamoDB</strong> - Store the visitor count</li>
+<li><strong>Secrets Manager</strong> - Store the API secret</li>
 </ul>
 <p><strong>The Flow:</strong>
 1. User visits <code>resume.sayaji.dev</code>
@@ -189,19 +187,20 @@
 7. Counter Lambda updates DynamoDB and returns count
 8. Frontend displays the visitor count</p>
 <h2 id="why-aws-cdk">Why AWS CDK?</h2>
-<p>Before diving into code, let me explain why I chose CDK over other IaC tools.</p>
+<p>I think CDK is new territory for me. I have used other IaC tools like Terraform and I liked them. But I wanted to try something new.</p>
 <p><strong>CDK uses three core concepts:</strong></p>
 <ul>
 <li><strong>Construct</strong> - A reusable building block (like a Lego brick) that creates AWS resources</li>
 <li><strong>Stack</strong> - A logical deployment unit containing multiple constructs</li>
 <li><strong>App</strong> - The root container for all your stacks</li>
 </ul>
-<p>I like to think of constructs as <strong>Lego bricks</strong> single, reusable pieces that create one or more AWS resources.</p>
+<p>I like to think of constructs as <strong>Lego bricks</strong>—single, reusable pieces that create one or more AWS resources.</p>
 <p>For example:
 - <code>s3.Bucket</code> → creates an AWS S3 bucket
 - <code>cloudfront.Distribution</code> → creates a CloudFront distribution
 - <code>route53.ARecord</code> → creates a DNS record</p>
-<p>The beauty? You write TypeScript instead of YAML. Here's a simple example:</p>
+<p>As a developer turned DevOps engineer, I find it easier to write code than YAML.</p>
+<p>Below is a small example of creating an S3 bucket using CDK.</p>
 <div class="highlight"><pre><span></span><code><span class="ow">new</span><span class="w"> </span><span class="nx">s3</span><span class="p">.</span><span class="nx">Bucket</span><span class="p">(</span><span class="nx">scope</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;WebsiteBucket&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nx">blockPublicAccess</span><span class="o">:</span><span class="w"> </span><span class="kt">s3.BlockPublicAccess.BLOCK_ALL</span><span class="p">,</span>
 <span class="w">  </span><span class="nx">encryption</span><span class="o">:</span><span class="w"> </span><span class="kt">s3.BucketEncryption.S3_MANAGED</span><span class="p">,</span>
@@ -209,7 +208,7 @@
 <span class="p">});</span>
 </code></pre></div>
 <h2 id="the-pattern-stack-composition">The Pattern: Stack Composition</h2>
-<p>Instead of one monolithic stack, I separated concerns into three stacks:</p>
+<p>Instead of creating one giant stack, I split the stack into multiple logical stacks.</p>
 <div class="highlight"><pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="nx">app</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">cdk</span><span class="p">.</span><span class="nx">App</span><span class="p">();</span>
 
 <span class="c1">// 1. Base infrastructure (deploy once)</span>
@@ -254,12 +253,11 @@
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-<p><strong>Key decision:</strong> Block all public access. CloudFront accesses S3 using Origin Access Control (OAC), not public URLs.</p>
 <h3 id="2-cloudfront-distribution-multi-origin">2. CloudFront Distribution (Multi-Origin)</h3>
-<p>This was the trickiest part. I needed CloudFront to serve:
+<p>This was the challenging part
 - Static content from S3 (default behavior)
 - API requests to API Gateway (path <code>/count</code>)</p>
-<div class="highlight"><pre><span></span><code><span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">WebsiteDistribution</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">Construct</span><span class="w"> </span><span class="p">{</span>
+<p><div class="highlight"><pre><span></span><code><span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">WebsiteDistribution</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">Construct</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="kr">constructor</span><span class="p">(</span><span class="nx">scope</span><span class="o">:</span><span class="w"> </span><span class="kt">Construct</span><span class="p">,</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">props</span><span class="o">:</span><span class="w"> </span><span class="kt">CloudFrontProps</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">super</span><span class="p">(</span><span class="nx">scope</span><span class="p">,</span><span class="w"> </span><span class="nx">id</span><span class="p">);</span>
 
@@ -291,7 +289,8 @@
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-<p><strong>The magic:</strong> CloudFront automatically adds the <code>x-cf-secret</code> header to API requests, which the Lambda authorizer validates. This prevents direct API access!</p>
+<strong>How do I stop direct API access?</strong></p>
+<p>I added <code>x-cf-secret</code> header to API requests injected by CloudFront, which the Lambda authorizer validates. This prevents direct API access! </p>
 <h3 id="3-lambda-dynamodb-visitor-counter">3. Lambda + DynamoDB (Visitor Counter)</h3>
 <p>The counter Lambda tracks unique visitors by IP:</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
@@ -318,6 +317,7 @@
         <span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="s2">&quot;ip&quot;</span><span class="p">:</span> <span class="n">src_ip</span><span class="p">,</span> <span class="s2">&quot;unique_visitors&quot;</span><span class="p">:</span> <span class="n">total</span><span class="p">})</span>
     <span class="p">}</span>
 </code></pre></div>
+<p>I know, I know, storing IP addresses is not the best way to do it, but it works for now (maybe Flask + SQLite in WAL mode. In-memory IP address rate limiting), but this is for the future.</p>
 <p><strong>DynamoDB table:</strong>
 <div class="highlight"><pre><span></span><code><span class="ow">new</span><span class="w"> </span><span class="nx">dynamodb</span><span class="p">.</span><span class="nx">Table</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;CounterTable&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nx">partitionKey</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;id&quot;</span><span class="p">,</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="nx">dynamodb</span><span class="p">.</span><span class="nx">AttributeType</span><span class="p">.</span><span class="nx">STRING</span><span class="w"> </span><span class="p">},</span>
@@ -354,9 +354,14 @@
         <span class="p">},</span>
     <span class="p">}</span>
 </code></pre></div>
+<h3 id="4-github-oidc">4. GitHub OIDC</h3>
+<p>Setting up GitHub OIDC was a bit tricky. I had to enable the <code>oidc</code> provider in the <code>github-actions.yml</code> file:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">permissions</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">id-token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">write</span>
+<span class="w">  </span><span class="nt">contents</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">read</span>
+</code></pre></div>
 <h2 id="testing-strategy">Testing Strategy</h2>
-<p>I use <strong>two types of tests</strong>:</p>
-<h3 id="1-python-unit-tests-lambda-functions">1. Python Unit Tests (Lambda Functions)</h3>
+<h3 id="python-unit-tests-lambda-functions">Python Unit Tests (Lambda Functions)</h3>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">CounterLambdaTest</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
     <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;lambda_functions.counter.index.table&quot;</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">test_lambda_success</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mock_table</span><span class="p">):</span>
@@ -369,93 +374,53 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;statusCode&quot;</span><span class="p">],</span> <span class="mi">200</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s2">&quot;unique_visitors&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;body&quot;</span><span class="p">]))</span>
 </code></pre></div>
-<h3 id="2-cdk-snapshot-tests-infrastructure">2. CDK Snapshot Tests (Infrastructure)</h3>
-<div class="highlight"><pre><span></span><code><span class="nx">test</span><span class="p">(</span><span class="s1">&#39;Base Infrastructure creates Route53 and ACM&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">app</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">cdk</span><span class="p">.</span><span class="nx">App</span><span class="p">();</span>
-<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">stack</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">BaseInfraStack</span><span class="p">(</span><span class="nx">app</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;TestStack&#39;</span><span class="p">);</span>
-<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">template</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">Template</span><span class="p">.</span><span class="nx">fromStack</span><span class="p">(</span><span class="nx">stack</span><span class="p">);</span>
-
-<span class="w">  </span><span class="nx">template</span><span class="p">.</span><span class="nx">hasResourceProperties</span><span class="p">(</span><span class="s1">&#39;AWS::Route53::HostedZone&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">Name</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;sayaji.dev.&#39;</span><span class="p">,</span>
-<span class="w">  </span><span class="p">});</span>
-<span class="p">});</span>
-</code></pre></div>
 <p><strong>Run tests:</strong>
 <div class="highlight"><pre><span></span><code><span class="c1"># Python tests</span>
 python<span class="w"> </span>-m<span class="w"> </span>unittest<span class="w"> </span>discover<span class="w"> </span>-s<span class="w"> </span>./test<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;test_*.py&quot;</span><span class="w"> </span>-v
-
-<span class="c1"># CDK tests</span>
-npm<span class="w"> </span><span class="nb">test</span>
 </code></pre></div></p>
 <h2 id="cicd-pipeline">CI/CD Pipeline</h2>
-<p>I use <strong>GitHub Actions</strong> with a 6-stage pipeline:</p>
-<div class="highlight"><pre><span></span><code>1. Setup       → Install dependencies (cached)
-2. Tests       → Run Python + CDK tests
-3. Plan        → CDK diff (show changes)
-4. Approval    → Manual approval for production
-5. Deploy      → Deploy to AWS
-6. Notify      → Send notifications
-</code></pre></div>
+<p>I use <strong>GitHub Actions</strong> with a six-stage pipeline:</p>
+<ol>
+<li>Setup       → Install dependencies (cached)</li>
+<li>Tests       → Run Python + CDK tests</li>
+<li>Plan        → CDK diff (show changes)</li>
+<li>Approval    → Manual approval for production</li>
+<li>Deploy      → Deploy to AWS</li>
+<li>Notify      → Send notifications</li>
+</ol>
 <p><strong>Key features:</strong>
 - <strong>OIDC Authentication</strong> - No AWS credentials stored in GitHub!
 - <strong>PR Comments</strong> - Automatically comments CDK diff on pull requests
 - <strong>Manual Approval</strong> - Production deployments require approval</p>
-<div class="highlight"><pre><span></span><code><span class="nt">plan</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">steps</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Configure AWS (OIDC)</span>
-<span class="w">      </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">aws-actions/configure-aws-credentials@v4</span>
-<span class="w">      </span><span class="nt">with</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">role-to-assume</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">arn:aws:iam::123456789:role/Github_Actions_Role</span>
-<span class="w">        </span><span class="nt">aws-region</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">us-east-1</span>
-
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CDK Diff</span>
-<span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cdk diff --all</span>
-</code></pre></div>
-<p><a href="https://github.com/Sayaji911/sayaji-website-infra/blob/master/.github/workflows/main.yml">See the full CI/CD workflow on GitHub</a></p>
 <h2 id="lessons-learned">Lessons Learned</h2>
 <p>After building this infrastructure, here are my key takeaways:</p>
 <ol>
-<li><strong>Start Simple</strong> - I began with just S3 + CloudFront, then added features incrementally</li>
-<li><strong>Constructs are Powerful</strong> - Reusable constructs saved me hours of repetitive code</li>
-<li><strong>Test Early</strong> - Writing tests alongside infrastructure caught bugs before deployment</li>
-<li><strong>Security First</strong> - Block public S3 access, use OIDC, implement authorizers</li>
-<li><strong>Stack Composition</strong> - Separating base/backend/website stacks makes updates safer</li>
-<li><strong>Documentation Matters</strong> - AWS CDK docs are good, but real examples are better</li>
+<li>
+<p><strong>Start Simple</strong> - Just start and start small and fast. Don't overcomplicate things.</p>
+</li>
+<li>
+<p><strong>Constructs are Powerful</strong> - Reusable constructs saved me hours of repetitive code</p>
+</li>
+<li>
+<p><strong>Security First</strong> - Block public S3 access, use OIDC, implement authorizers</p>
+</li>
+<li>
+<p><strong>Stack Composition</strong> - Separating base/backend/website stacks makes updates safer</p>
+</li>
+<li>
+<p><strong>Documentation Matters</strong> - AWS CDK docs are good, but real examples are better</p>
+</li>
 </ol>
 <h2 id="whats-next">What's Next?</h2>
 <p>Now that the foundation is solid, here are some ideas I'm exploring:</p>
-<h3 id="1-add-more-websites">1. Add More Websites</h3>
-<p>The beauty of this pattern is reusability:</p>
-<div class="highlight"><pre><span></span><code><span class="ow">new</span><span class="w"> </span><span class="nx">PortfolioStack</span><span class="p">(</span><span class="nx">app</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;PortfolioStack&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="p">...</span><span class="nx">baseProps</span><span class="p">,</span>
-<span class="w">  </span><span class="nx">siteDomain</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;portfolio.sayaji.dev&quot;</span><span class="p">,</span>
-<span class="p">});</span>
-</code></pre></div>
-<h3 id="2-monitoring-alerts">2. Monitoring &amp; Alerts</h3>
-<p>Add CloudWatch alarms for errors:</p>
-<div class="highlight"><pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="nx">errorAlarm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">cloudwatch</span><span class="p">.</span><span class="nx">Alarm</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;LambdaErrors&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="nx">metric</span><span class="o">:</span><span class="w"> </span><span class="kt">counterLambda.function.metricErrors</span><span class="p">(),</span>
-<span class="w">  </span><span class="nx">threshold</span><span class="o">:</span><span class="w"> </span><span class="kt">5</span><span class="p">,</span>
-<span class="w">  </span><span class="nx">evaluationPeriods</span><span class="o">:</span><span class="w"> </span><span class="kt">1</span><span class="p">,</span>
-<span class="p">});</span>
-</code></pre></div>
-<h3 id="3-cost-optimization">3. Cost Optimization</h3>
-<ul>
-<li>Enable CloudFront caching with longer TTLs</li>
-<li>Use S3 Intelligent-Tiering</li>
-<li>Set DynamoDB to on-demand billing</li>
-</ul>
-<h3 id="4-waf-for-security">4. WAF for Security</h3>
-<p>Protect against DDoS and common attacks with AWS WAF rate limiting.</p>
+<h3 id="1-monitoring-alerts">1. Monitoring &amp; Alerts</h3>
+<p>We can use New Relic or Datadog to monitor our infrastructure, like the Lambda functions, CloudFront, S3, and DynamoDB.</p>
+<h3 id="2-cost-optimization">2. Cost Optimization</h3>
+<p>It costs me less than $5 per month to run this infrastructure.</p>
+<h3 id="3-waf-for-security">3. WAF for Security</h3>
+<p>Protect against DDoS and common attacks with AWS WAF rate limiting. (but this is expensive!)</p>
 <h2 id="conclusion">Conclusion</h2>
-<p>Building this infrastructure taught me that <strong>Infrastructure as Code isn't just about automation—it's about reproducibility, testability, and maintainability</strong>.</p>
-<p>What started as a manual, error-prone process is now:</p>
-<p>✅ <strong>Reproducible</strong> - Deploy to any AWS account with <code>cdk deploy</code><br />
-✅ <strong>Scalable</strong> - Serverless architecture handles traffic spikes<br />
-✅ <strong>Secure</strong> - No public S3 access, API authentication, HTTPS everywhere<br />
-✅ <strong>Cost-effective</strong> - Pay only for what you use<br />
-✅ <strong>Testable</strong> - Comprehensive tests catch bugs before deployment<br />
-✅ <strong>Automated</strong> - CI/CD pipeline handles everything  </p>
+<p>It was fun doing this, and I learned a lot about CDK and AWS. As a developer, I find CDK fluid and feels like I am slipping into a familiar pair of shoes. We get to use constructs, functions, loops and variables and suddenly infrastructure stops feeling like configuration files and starts feeling like code. </p>
 <p><strong>The complete code is available on <a href="https://github.com/Sayaji911/sayaji-website-infra">GitHub</a>.</strong></p>
 <p>If you're considering AWS CDK for your next project, I highly recommend it. The learning curve is worth it!</p>
 <hr />

@@ -145,7 +145,7 @@
             <li class="second-level"><a href="#whats-next">What's Next?</a></li>
                 
                 <li class="third-level"><a href="#1-monitoring-alerts">1. Monitoring &amp; Alerts</a></li>
-                <li class="third-level"><a href="#2-cost-optimization">2. Cost Optimization</a></li>
+                <li class="third-level"><a href="#2-optimizing-costs">2. Optimizing Costs</a></li>
                 <li class="third-level"><a href="#3-waf-for-security">3. WAF for Security</a></li>
             <li class="second-level"><a href="#conclusion">Conclusion</a></li>
                 
@@ -154,9 +154,9 @@
         <div class="col-md-9" role="main">
 
 <h1 id="from-manual-aws-setup-to-infrastructure-as-code-my-cdk-journey">From Manual AWS Setup to Infrastructure as Code: My CDK Journey</h1>
-<p>Last week, I wanted to host a static website on AWS. I started by creating S3 buckets, CloudFront distributions, and Route53 basically everything manually.</p>
-<p>It worked, but it was tedious and not reproducible.</p>
-<p>For every new domain I need to host, I would need to:</p>
+<p>Last week, I wanted to host a static website on AWS. I started with creating S3 buckets, CloudFront distributions, and Route53 manually.</p>
+<p>It worked, but it soon began to feel tedious and not reproducible.</p>
+<p>For every new domain I needed to host, I would need to:</p>
 <ul>
 <li>Create an S3 bucket.</li>
 <li>Set up a CloudFront distribution.</li>
@@ -193,7 +193,7 @@
 <li><strong>Stack</strong> - A logical deployment unit containing multiple constructs</li>
 <li><strong>App</strong> - The root container for all your stacks</li>
 </ul>
-<p>I like to think of constructs as <strong>Lego bricks</strong>—single, reusable pieces that create one or more AWS resources.</p>
+<p>I like to think of constructs as <strong>Lego bricks</strong> single, reusable pieces that create one or more AWS resources.</p>
 <p>For example:
 - <code>s3.Bucket</code> → creates an AWS S3 bucket
 - <code>cloudfront.Distribution</code> → creates a CloudFront distribution
@@ -230,14 +230,16 @@
 
 <span class="nx">app</span><span class="p">.</span><span class="nx">synth</span><span class="p">();</span>
 </code></pre></div>
-<p><strong>Why this pattern?</strong>
-1. <strong>Deploy common resources once</strong>:  Route53, ACM Certificate will be same for subdomains so it best fits for BaseInfraStack, where as BackendStack will have API Gateway and Lambda functions and WebsiteStack will have S3 bucket and CloudFront distribution.</p>
+<p><strong>Why this pattern?</strong></p>
 <ol>
 <li>
-<p><strong>Pass outputs between stacks</strong> : We can pass outputs of the one stack to another stack. For example, we require the API GW url and secret from BackendStack to WebsiteStack.</p>
+<p><strong>Deploy common resources once</strong>:  Route53 and ACM Certificates will be the same for subdomains, so it best fits for BaseInfraStack, whereas BackendStack will have API Gateway and Lambda functions and WebsiteStack will have S3 bucket and CloudFront distribution.</p>
 </li>
 <li>
-<p><strong>Reuse patterns</strong> Now this pattern can be reused for any subdomain I will create.</p>
+<p><strong>Pass outputs between stacks</strong>: We can pass outputs of one stack to another stack. For example, we require the API GW url and secret from BackendStack to WebsiteStack.</p>
+</li>
+<li>
+<p><strong>Reuse patterns</strong>: Now this pattern can be reused for any subdomain I will create.</p>
 </li>
 </ol>
 <h2 id="key-constructs">Key Constructs</h2>
@@ -396,29 +398,25 @@ python<span class="w"> </span>-m<span class="w"> </span>unittest<span class="w">
 <p><strong>Start Simple</strong> - Just start and start small and fast. Don't overcomplicate things.</p>
 </li>
 <li>
-<p><strong>Use Constructs where possible</strong> - Reusable constructs will save me hours from writig the same code again and again.</p>
+<p><strong>Use Constructs where possible</strong> - Reusable constructs have saved me hours from writing the same code again and again.</p>
 </li>
 <li>
-<p><strong>Security  Shift Left</strong> - I blocked public access to S3, used OIDC and implemented authorizers</p>
+<p><strong>Security Shift Left</strong> - I blocked public access to S3, used OIDC and implemented authorizers</p>
 </li>
 <li>
-<p><strong>Stack Composition</strong> - Seperating stacks makes it easier to maintain and also it is safer to update one stack without breaking the other.</p>
+<p><strong>Stack Composition</strong> - Separating stacks makes it easier to maintain and also it is safer to update one stack without breaking the other.</p>
 </li>
 </ol>
 <h2 id="whats-next">What's Next?</h2>
 <p>Now that we have the foundation solid, here are some ideas I will be exploring:</p>
 <h3 id="1-monitoring-alerts">1. Monitoring &amp; Alerts</h3>
-<p>We can use New Relic or Datadog to monitor our infrastructure, like the Lambda functions, CloudFront, S3, and DynamoDB.</p>
-<h3 id="2-cost-optimization">2. Cost Optimization</h3>
+<p>We can use <strong>New Relic</strong> or <strong>Data Dog</strong> to monitor our simple infrastructure.</p>
+<h3 id="2-optimizing-costs">2. Optimizing Costs</h3>
 <p>It costs me less than $5 per month to run this infrastructure.</p>
 <h3 id="3-waf-for-security">3. WAF for Security</h3>
 <p>Protect against DDoS and common attacks with AWS WAF rate limiting. (but this is expensive!)</p>
 <h2 id="conclusion">Conclusion</h2>
-<p>It was fun doing this, and I learned a lot about CDK and AWS. As a developer, I find CDK fluid and feels like I am slipping into a familiar pair of shoes. We get to use constructs, functions, loops and variables and suddenly infrastructure stops feeling like configuration files and starts feeling like code. </p>
-<p><strong>The complete code is available on <a href="https://github.com/Sayaji911/sayaji-website-infra">GitHub</a>.</strong></p>
-<p>If you're considering AWS CDK for your next project, I highly recommend it. The learning curve is worth it!</p>
-<hr />
-<p><em>Have questions or suggestions? Feel free to reach out or open an issue on GitHub!</em></p></div>
+<p>It was fun doing this, and I learned a lot about CDK and AWS. As a developer, I find CDK fluid and feels like I am slipping into a familiar pair of shoes. We get to use constructs, functions, loops and variables and suddenly infrastructure stops feeling like configuration files and starts feeling like code. </p></div>
         
         
     </div>

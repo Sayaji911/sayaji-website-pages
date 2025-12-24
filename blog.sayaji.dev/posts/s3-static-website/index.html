@@ -132,10 +132,9 @@
                 <li class="third-level"><a href="#3-lambda-dynamodb-visitor-counter">3. Lambda + DynamoDB (Visitor Counter)</a></li>
             <li class="second-level"><a href="#challenges-i-faced">Challenges I Faced</a></li>
                 
-                <li class="third-level"><a href="#1-cloudfront-origin-access-control-oac">1. CloudFront Origin Access Control (OAC)</a></li>
-                <li class="third-level"><a href="#2-cross-stack-references">2. Cross-Stack References</a></li>
-                <li class="third-level"><a href="#3-api-gateway-authorizer">3. API Gateway Authorizer</a></li>
-                <li class="third-level"><a href="#4-github-oidc">4. GitHub OIDC</a></li>
+                <li class="third-level"><a href="#1-cross-stack-references">1. Cross-Stack References</a></li>
+                <li class="third-level"><a href="#2-api-gateway-authorizer">2. API Gateway Authorizer</a></li>
+                <li class="third-level"><a href="#3-github-oidc">3. GitHub OIDC</a></li>
             <li class="second-level"><a href="#testing-strategy">Testing Strategy</a></li>
                 
                 <li class="third-level"><a href="#python-unit-tests-lambda-functions">Python Unit Tests (Lambda Functions)</a></li>
@@ -232,9 +231,15 @@
 <span class="nx">app</span><span class="p">.</span><span class="nx">synth</span><span class="p">();</span>
 </code></pre></div>
 <p><strong>Why this pattern?</strong>
-1. <strong>Deploy shared resources once</strong> (Route53, ACM Certificate)
-2. <strong>Pass outputs between stacks</strong> using cross-stack references
-3. <strong>Reuse patterns</strong> across multiple websites</p>
+1. <strong>Deploy common resources once</strong>:  Route53, ACM Certificate will be same for subdomains so it best fits for BaseInfraStack, where as BackendStack will have API Gateway and Lambda functions and WebsiteStack will have S3 bucket and CloudFront distribution.</p>
+<ol>
+<li>
+<p><strong>Pass outputs between stacks</strong> : We can pass outputs of the one stack to another stack. For example, we require the API GW url and secret from BackendStack to WebsiteStack.</p>
+</li>
+<li>
+<p><strong>Reuse patterns</strong> Now this pattern can be reused for any subdomain I will create.</p>
+</li>
+</ol>
 <h2 id="key-constructs">Key Constructs</h2>
 <p>Let me show you the most important constructs I built.</p>
 <h3 id="1-s3-bucket-secure-by-default">1. S3 Bucket (Secure by Default)</h3>
@@ -325,21 +330,13 @@
 <span class="p">});</span>
 </code></pre></div></p>
 <h2 id="challenges-i-faced">Challenges I Faced</h2>
-<h3 id="1-cloudfront-origin-access-control-oac">1. CloudFront Origin Access Control (OAC)</h3>
-<p>Initially, I used the deprecated Origin Access Identity (OAI). Switching to OAC took some trial and error:</p>
-<div class="highlight"><pre><span></span><code><span class="c1">// ❌ Old way (deprecated)</span>
-<span class="nx">origins</span><span class="p">.</span><span class="nx">S3Origin</span><span class="p">.</span><span class="nx">withOriginAccessIdentity</span><span class="p">(</span><span class="nx">bucket</span><span class="p">)</span>
-
-<span class="c1">// ✅ New way</span>
-<span class="nx">origins</span><span class="p">.</span><span class="nx">S3BucketOrigin</span><span class="p">.</span><span class="nx">withOriginAccessControl</span><span class="p">(</span><span class="nx">bucket</span><span class="p">)</span>
-</code></pre></div>
-<h3 id="2-cross-stack-references">2. Cross-Stack References</h3>
+<h3 id="1-cross-stack-references">1. Cross-Stack References</h3>
 <p>Passing values between stacks required enabling <code>crossRegionReferences</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="ow">new</span><span class="w"> </span><span class="nx">BaseInfraStack</span><span class="p">(</span><span class="nx">app</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;BaseInfraStack&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nx">crossRegionReferences</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span><span class="w"> </span><span class="c1">// Required!</span>
 <span class="p">});</span>
 </code></pre></div>
-<h3 id="3-api-gateway-authorizer">3. API Gateway Authorizer</h3>
+<h3 id="2-api-gateway-authorizer">2. API Gateway Authorizer</h3>
 <p>Setting up the Lambda authorizer was tricky. The authorizer must return an IAM policy:</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">generate_policy</span><span class="p">(</span><span class="n">principal_id</span><span class="p">,</span> <span class="n">effect</span><span class="p">,</span> <span class="n">resource</span><span class="p">):</span>
     <span class="k">return</span> <span class="p">{</span>
@@ -354,7 +351,7 @@
         <span class="p">},</span>
     <span class="p">}</span>
 </code></pre></div>
-<h3 id="4-github-oidc">4. GitHub OIDC</h3>
+<h3 id="3-github-oidc">3. GitHub OIDC</h3>
 <p>Setting up GitHub OIDC was a bit tricky. I had to enable the <code>oidc</code> provider in the <code>github-actions.yml</code> file:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">permissions</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">id-token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">write</span>
@@ -389,7 +386,7 @@ python<span class="w"> </span>-m<span class="w"> </span>unittest<span class="w">
 <li>Notify      → Send notifications</li>
 </ol>
 <p><strong>Key features:</strong>
-- <strong>OIDC Authentication</strong> - No AWS credentials stored in GitHub!
+- <strong>OIDC Authentication</strong> - No AWS credentials stored in GitHub! 
 - <strong>PR Comments</strong> - Automatically comments CDK diff on pull requests
 - <strong>Manual Approval</strong> - Production deployments require approval</p>
 <h2 id="lessons-learned">Lessons Learned</h2>
@@ -399,20 +396,17 @@ python<span class="w"> </span>-m<span class="w"> </span>unittest<span class="w">
 <p><strong>Start Simple</strong> - Just start and start small and fast. Don't overcomplicate things.</p>
 </li>
 <li>
-<p><strong>Constructs are Powerful</strong> - Reusable constructs saved me hours of repetitive code</p>
+<p><strong>Use Constructs where possible</strong> - Reusable constructs will save me hours from writig the same code again and again.</p>
 </li>
 <li>
-<p><strong>Security First</strong> - Block public S3 access, use OIDC, implement authorizers</p>
+<p><strong>Security  Shift Left</strong> - I blocked public access to S3, used OIDC and implemented authorizers</p>
 </li>
 <li>
-<p><strong>Stack Composition</strong> - Separating base/backend/website stacks makes updates safer</p>
-</li>
-<li>
-<p><strong>Documentation Matters</strong> - AWS CDK docs are good, but real examples are better</p>
+<p><strong>Stack Composition</strong> - Seperating stacks makes it easier to maintain and also it is safer to update one stack without breaking the other.</p>
 </li>
 </ol>
 <h2 id="whats-next">What's Next?</h2>
-<p>Now that the foundation is solid, here are some ideas I'm exploring:</p>
+<p>Now that we have the foundation solid, here are some ideas I will be exploring:</p>
 <h3 id="1-monitoring-alerts">1. Monitoring &amp; Alerts</h3>
 <p>We can use New Relic or Datadog to monitor our infrastructure, like the Lambda functions, CloudFront, S3, and DynamoDB.</p>
 <h3 id="2-cost-optimization">2. Cost Optimization</h3>

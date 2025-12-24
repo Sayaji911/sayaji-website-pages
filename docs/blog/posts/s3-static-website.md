@@ -110,9 +110,11 @@ app.synth();
 ```
 
 **Why this pattern?**
-1. **Deploy shared resources once** (Route53, ACM Certificate)
-2. **Pass outputs between stacks** using cross-stack references
-3. **Reuse patterns** across multiple websites
+1. **Deploy common resources once**:  Route53, ACM Certificate will be same for subdomains so it best fits for BaseInfraStack, where as BackendStack will have API Gateway and Lambda functions and WebsiteStack will have S3 bucket and CloudFront distribution.
+
+2. **Pass outputs between stacks** : We can pass outputs of the one stack to another stack. For example, we require the API GW url and secret from BackendStack to WebsiteStack.
+
+3. **Reuse patterns** Now this pattern can be reused for any subdomain I will create.
 
 ## Key Constructs
 
@@ -311,17 +313,16 @@ After building this infrastructure, here are my key takeaways:
 
 1. **Start Simple** - Just start and start small and fast. Don't overcomplicate things.
 
-2. **Constructs are Powerful** - Reusable constructs saved me hours of repetitive code
+2. **Use Constructs where possible** - Reusable constructs will save me hours from writig the same code again and again.
 
-3. **Security First** - Block public S3 access, use OIDC, implement authorizers
+3. **Security  Shift Left** - I blocked public access to S3, used OIDC and implemented authorizers
 
-4. **Stack Composition** - Separating base/backend/website stacks makes updates safer
+4. **Stack Composition** - Seperating stacks makes it easier to maintain and also it is safer to update one stack without breaking the other.
 
-5. **Documentation Matters** - AWS CDK docs are good, but real examples are better
 
 ## What's Next?
 
-Now that the foundation is solid, here are some ideas I'm exploring:
+Now that we have the foundation solid, here are some ideas I will be exploring:
 
 
 ### 1. Monitoring & Alerts

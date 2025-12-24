@@ -11,12 +11,12 @@ image: https://picsum.photos/seed/cloud/800/400
 # From Manual AWS Setup to Infrastructure as Code: My CDK Journey
 
 
-Last week, I wanted to host a static website on AWS. I started by creating S3 buckets, CloudFront distributions, and Route53 basically everything manually.
+Last week, I wanted to host a static website on AWS. I started with creating S3 buckets, CloudFront distributions, and Route53 manually.
 
 
-It worked, but it was tedious and not reproducible.
+It worked, but it soon began to feel tedious and not reproducible.
 
-For every new domain I need to host, I would need to:
+For every new domain I needed to host, I would need to:
 
 - Create an S3 bucket.
 - Set up a CloudFront distribution.
@@ -61,7 +61,7 @@ I think CDK is new territory for me. I have used other IaC tools like Terraform 
 - **Stack** - A logical deployment unit containing multiple constructs
 - **App** - The root container for all your stacks
 
-I like to think of constructs as **Lego bricks**—single, reusable pieces that create one or more AWS resources.
+I like to think of constructs as **Lego bricks** single, reusable pieces that create one or more AWS resources.
 
 For example:
 - `s3.Bucket` → creates an AWS S3 bucket
@@ -110,11 +110,12 @@ app.synth();
 ```
 
 **Why this pattern?**
-1. **Deploy common resources once**:  Route53, ACM Certificate will be same for subdomains so it best fits for BaseInfraStack, where as BackendStack will have API Gateway and Lambda functions and WebsiteStack will have S3 bucket and CloudFront distribution.
 
-2. **Pass outputs between stacks** : We can pass outputs of the one stack to another stack. For example, we require the API GW url and secret from BackendStack to WebsiteStack.
+1. **Deploy common resources once**:  Route53 and ACM Certificates will be the same for subdomains, so it best fits for BaseInfraStack, whereas BackendStack will have API Gateway and Lambda functions and WebsiteStack will have S3 bucket and CloudFront distribution.
 
-3. **Reuse patterns** Now this pattern can be reused for any subdomain I will create.
+2. **Pass outputs between stacks**: We can pass outputs of one stack to another stack. For example, we require the API GW url and secret from BackendStack to WebsiteStack.
+
+3. **Reuse patterns**: Now this pattern can be reused for any subdomain I will create.
 
 ## Key Constructs
 
@@ -313,11 +314,11 @@ After building this infrastructure, here are my key takeaways:
 
 1. **Start Simple** - Just start and start small and fast. Don't overcomplicate things.
 
-2. **Use Constructs where possible** - Reusable constructs will save me hours from writig the same code again and again.
+2. **Use Constructs where possible** - Reusable constructs have saved me hours from writing the same code again and again.
 
-3. **Security  Shift Left** - I blocked public access to S3, used OIDC and implemented authorizers
+3. **Security Shift Left** - I blocked public access to S3, used OIDC and implemented authorizers
 
-4. **Stack Composition** - Seperating stacks makes it easier to maintain and also it is safer to update one stack without breaking the other.
+4. **Stack Composition** - Separating stacks makes it easier to maintain and also it is safer to update one stack without breaking the other.
 
 
 ## What's Next?
@@ -327,9 +328,9 @@ Now that we have the foundation solid, here are some ideas I will be exploring:
 
 ### 1. Monitoring & Alerts
 
-We can use New Relic or Datadog to monitor our infrastructure, like the Lambda functions, CloudFront, S3, and DynamoDB.
+We can use **New Relic** or **Data Dog** to monitor our simple infrastructure.
 
-### 2. Cost Optimization
+### 2. Optimizing Costs
 It costs me less than $5 per month to run this infrastructure.
 
 ### 3. WAF for Security
@@ -339,12 +340,3 @@ Protect against DDoS and common attacks with AWS WAF rate limiting. (but this is
 ## Conclusion
 
 It was fun doing this, and I learned a lot about CDK and AWS. As a developer, I find CDK fluid and feels like I am slipping into a familiar pair of shoes. We get to use constructs, functions, loops and variables and suddenly infrastructure stops feeling like configuration files and starts feeling like code. 
- 
-
-**The complete code is available on [GitHub](https://github.com/Sayaji911/sayaji-website-infra).**
-
-If you're considering AWS CDK for your next project, I highly recommend it. The learning curve is worth it!
-
----
-
-*Have questions or suggestions? Feel free to reach out or open an issue on GitHub!*

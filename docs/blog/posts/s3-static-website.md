@@ -42,13 +42,21 @@ Our serverless infrastructure includes:
 - **Secrets Manager** - Store the API secret
 
 **The Flow:**
+
 1. User visits `resume.sayaji.dev`
+
 2. Route53 routes to CloudFront distribution
+
 3. CloudFront serves static files from S3
+
 4. JavaScript calls `/count` endpoint
+
 5. CloudFront routes `/count` to API Gateway (with secret header)
+
 6. API Gateway authorizer validates the secret
+
 7. Counter Lambda updates DynamoDB and returns count
+
 8. Frontend displays the visitor count
 
 ## Why AWS CDK?
@@ -79,43 +87,6 @@ new s3.Bucket(scope, 'WebsiteBucket', {
   enforceSSL: true,
 });
 ```
-
-## The Pattern: Stack Composition
-
-Instead of creating one giant stack, I split the stack into multiple logical stacks.
-
-
-```typescript
-const app = new cdk.App();
-
-// 1. Base infrastructure (deploy once)
-const base = new BaseInfraStack(app, "BaseInfraStack", {
-  env: { account: "123456789", region: "us-east-1" },
-});
-
-// 2. Backend services (dynamic features)
-const backend = new BackendStack(app, "BackendStack", {
-  env: { account: "123456789", region: "us-east-1" },
-});
-
-// 3. Website stacks (reusable pattern)
-new ResumeStack(app, "ResumeStack", {
-  hostedZoneId: base.hostedZone.hostedZoneId,
-  certificateArn: base.certificate.certificateArn,
-  apiUrl: backend.apiUrl,
-  cfSecret: backend.cfSecret,
-});
-
-app.synth();
-```
-
-**Why this pattern?**
-
-1. **Deploy common resources once**:  Route53 and ACM Certificates will be the same for subdomains, so it best fits for BaseInfraStack, whereas BackendStack will have API Gateway and Lambda functions and WebsiteStack will have S3 bucket and CloudFront distribution.
-
-2. **Pass outputs between stacks**: We can pass outputs of one stack to another stack. For example, we require the API GW url and secret from BackendStack to WebsiteStack.
-
-3. **Reuse patterns**: Now this pattern can be reused for any subdomain I will create.
 
 ## Key Constructs
 
@@ -225,6 +196,44 @@ new dynamodb.Table(this, "CounterTable", {
 });
 ```
 
+## The Pattern: Stack Composition
+
+Now instead of creating one giant stack with all the constructs, I split the stack into multiple logical stacks.
+
+
+```typescript
+const app = new cdk.App();
+
+// 1. Base infrastructure (deploy once)
+const base = new BaseInfraStack(app, "BaseInfraStack", {
+  env: { account: "123456789", region: "us-east-1" },
+});
+
+// 2. Backend services (dynamic features)
+const backend = new BackendStack(app, "BackendStack", {
+  env: { account: "123456789", region: "us-east-1" },
+});
+
+// 3. Website stacks (reusable pattern)
+new ResumeStack(app, "ResumeStack", {
+  hostedZoneId: base.hostedZone.hostedZoneId,
+  certificateArn: base.certificate.certificateArn,
+  apiUrl: backend.apiUrl,
+  cfSecret: backend.cfSecret,
+});
+
+app.synth();
+```
+
+**Why this pattern?**
+
+1. **Deploy common resources once**:  Route53 and ACM Certificates will be the same for subdomains, so it best fits for BaseInfraStack, whereas BackendStack will have API Gateway and Lambda functions and WebsiteStack will have S3 bucket and CloudFront distribution.
+
+2. **Pass outputs between stacks**: We can pass outputs of one stack to another stack. For example, we require the API GW url and secret from BackendStack to WebsiteStack.
+
+3. **Reuse patterns**: Now this pattern can be reused for any subdomain I will create.
+
+
 ## Challenges I Faced
 
 ### 1. Cross-Stack References
@@ -325,15 +334,20 @@ After building this infrastructure, here are my key takeaways:
 
 Now that we have the foundation solid, here are some ideas I will be exploring:
 
+###  1. Secret Rotation
+The API Secret is not rotated. We can either use Secret Manager to rotate the secret or use a rotation lambda function.
 
-### 1. Monitoring & Alerts
+### 2. CDK Tests
+In this setup we have not covered CDK unit tests. We can add CDK unit tests to ensure the infrastructure is built correctly.
+
+### 3. Monitoring & Alerts
 
 We can use **New Relic** or **Data Dog** to monitor our simple infrastructure.
 
-### 2. Optimizing Costs
+### 4. Optimizing Costs
 It costs me less than $5 per month to run this infrastructure.
 
-### 3. WAF for Security
+### 5. WAF for Security
 
 Protect against DDoS and common attacks with AWS WAF rate limiting. (but this is expensive!)
 

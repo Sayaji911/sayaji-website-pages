@@ -123,13 +123,13 @@
                 
             <li class="second-level"><a href="#why-aws-cdk">Why AWS CDK?</a></li>
                 
-            <li class="second-level"><a href="#the-pattern-stack-composition">The Pattern: Stack Composition</a></li>
-                
             <li class="second-level"><a href="#key-constructs">Key Constructs</a></li>
                 
                 <li class="third-level"><a href="#1-s3-bucket-secure-by-default">1. S3 Bucket (Secure by Default)</a></li>
                 <li class="third-level"><a href="#2-cloudfront-distribution-multi-origin">2. CloudFront Distribution (Multi-Origin)</a></li>
                 <li class="third-level"><a href="#3-lambda-dynamodb-visitor-counter">3. Lambda + DynamoDB (Visitor Counter)</a></li>
+            <li class="second-level"><a href="#the-pattern-stack-composition">The Pattern: Stack Composition</a></li>
+                
             <li class="second-level"><a href="#challenges-i-faced">Challenges I Faced</a></li>
                 
                 <li class="third-level"><a href="#1-cross-stack-references">1. Cross-Stack References</a></li>
@@ -206,42 +206,6 @@
 <span class="w">  </span><span class="nx">enforceSSL</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
 <span class="p">});</span>
 </code></pre></div>
-<h2 id="the-pattern-stack-composition">The Pattern: Stack Composition</h2>
-<p>Instead of creating one giant stack, I split the stack into multiple logical stacks.</p>
-<div class="highlight"><pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="nx">app</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">cdk</span><span class="p">.</span><span class="nx">App</span><span class="p">();</span>
-
-<span class="c1">// 1. Base infrastructure (deploy once)</span>
-<span class="kd">const</span><span class="w"> </span><span class="nx">base</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">BaseInfraStack</span><span class="p">(</span><span class="nx">app</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;BaseInfraStack&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="nx">env</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">account</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;123456789&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">region</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;us-east-1&quot;</span><span class="w"> </span><span class="p">},</span>
-<span class="p">});</span>
-
-<span class="c1">// 2. Backend services (dynamic features)</span>
-<span class="kd">const</span><span class="w"> </span><span class="nx">backend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">BackendStack</span><span class="p">(</span><span class="nx">app</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;BackendStack&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="nx">env</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">account</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;123456789&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">region</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;us-east-1&quot;</span><span class="w"> </span><span class="p">},</span>
-<span class="p">});</span>
-
-<span class="c1">// 3. Website stacks (reusable pattern)</span>
-<span class="ow">new</span><span class="w"> </span><span class="nx">ResumeStack</span><span class="p">(</span><span class="nx">app</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;ResumeStack&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="nx">hostedZoneId</span><span class="o">:</span><span class="w"> </span><span class="kt">base.hostedZone.hostedZoneId</span><span class="p">,</span>
-<span class="w">  </span><span class="nx">certificateArn</span><span class="o">:</span><span class="w"> </span><span class="kt">base.certificate.certificateArn</span><span class="p">,</span>
-<span class="w">  </span><span class="nx">apiUrl</span><span class="o">:</span><span class="w"> </span><span class="kt">backend.apiUrl</span><span class="p">,</span>
-<span class="w">  </span><span class="nx">cfSecret</span><span class="o">:</span><span class="w"> </span><span class="kt">backend.cfSecret</span><span class="p">,</span>
-<span class="p">});</span>
-
-<span class="nx">app</span><span class="p">.</span><span class="nx">synth</span><span class="p">();</span>
-</code></pre></div>
-<p><strong>Why this pattern?</strong></p>
-<ol>
-<li>
-<p><strong>Deploy common resources once</strong>:  Route53 and ACM Certificates will be the same for subdomains, so it best fits for BaseInfraStack, whereas BackendStack will have API Gateway and Lambda functions and WebsiteStack will have S3 bucket and CloudFront distribution.</p>
-</li>
-<li>
-<p><strong>Pass outputs between stacks</strong>: We can pass outputs of one stack to another stack. For example, we require the API GW url and secret from BackendStack to WebsiteStack.</p>
-</li>
-<li>
-<p><strong>Reuse patterns</strong>: Now this pattern can be reused for any subdomain I will create.</p>
-</li>
-</ol>
 <h2 id="key-constructs">Key Constructs</h2>
 <p>Let me show you the most important constructs I built.</p>
 <h3 id="1-s3-bucket-secure-by-default">1. S3 Bucket (Secure by Default)</h3>
@@ -331,6 +295,42 @@
 <span class="w">  </span><span class="nx">billingMode</span><span class="o">:</span><span class="w"> </span><span class="kt">dynamodb.BillingMode.PAY_PER_REQUEST</span><span class="p">,</span><span class="w"> </span><span class="c1">// Serverless pricing!</span>
 <span class="p">});</span>
 </code></pre></div></p>
+<h2 id="the-pattern-stack-composition">The Pattern: Stack Composition</h2>
+<p>Instead of creating one giant stack, I split the stack into multiple logical stacks.</p>
+<div class="highlight"><pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="nx">app</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">cdk</span><span class="p">.</span><span class="nx">App</span><span class="p">();</span>
+
+<span class="c1">// 1. Base infrastructure (deploy once)</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">base</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">BaseInfraStack</span><span class="p">(</span><span class="nx">app</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;BaseInfraStack&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">env</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">account</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;123456789&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">region</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;us-east-1&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="p">});</span>
+
+<span class="c1">// 2. Backend services (dynamic features)</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">backend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">BackendStack</span><span class="p">(</span><span class="nx">app</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;BackendStack&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">env</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">account</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;123456789&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">region</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;us-east-1&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="p">});</span>
+
+<span class="c1">// 3. Website stacks (reusable pattern)</span>
+<span class="ow">new</span><span class="w"> </span><span class="nx">ResumeStack</span><span class="p">(</span><span class="nx">app</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;ResumeStack&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">hostedZoneId</span><span class="o">:</span><span class="w"> </span><span class="kt">base.hostedZone.hostedZoneId</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">certificateArn</span><span class="o">:</span><span class="w"> </span><span class="kt">base.certificate.certificateArn</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">apiUrl</span><span class="o">:</span><span class="w"> </span><span class="kt">backend.apiUrl</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">cfSecret</span><span class="o">:</span><span class="w"> </span><span class="kt">backend.cfSecret</span><span class="p">,</span>
+<span class="p">});</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">synth</span><span class="p">();</span>
+</code></pre></div>
+<p><strong>Why this pattern?</strong></p>
+<ol>
+<li>
+<p><strong>Deploy common resources once</strong>:  Route53 and ACM Certificates will be the same for subdomains, so it best fits for BaseInfraStack, whereas BackendStack will have API Gateway and Lambda functions and WebsiteStack will have S3 bucket and CloudFront distribution.</p>
+</li>
+<li>
+<p><strong>Pass outputs between stacks</strong>: We can pass outputs of one stack to another stack. For example, we require the API GW url and secret from BackendStack to WebsiteStack.</p>
+</li>
+<li>
+<p><strong>Reuse patterns</strong>: Now this pattern can be reused for any subdomain I will create.</p>
+</li>
+</ol>
 <h2 id="challenges-i-faced">Challenges I Faced</h2>
 <h3 id="1-cross-stack-references">1. Cross-Stack References</h3>
 <p>Passing values between stacks required enabling <code>crossRegionReferences</code>:</p>

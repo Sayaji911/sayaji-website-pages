@@ -347,7 +347,7 @@ We can use **New Relic** or **Data Dog** to monitor our simple infrastructure.
 ### 4. Optimizing Costs
 It costs me less than $5 per month to run this infrastructure.
 
-### 5. WAF for Security
+### . WAF for Security
 
 Protect against DDoS and common attacks with AWS WAF rate limiting. (but this is expensive!)
 

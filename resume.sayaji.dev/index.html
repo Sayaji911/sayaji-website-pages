@@ -4,13 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sayaji Chavan | Senior DevOps & Backend Engineer</title>
+    <title>Sayaji Chavan | Lead DevOps Engineer</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --text-main: #111827;
             --text-light: #4b5563;
-            --accent: #2563eb;
+            --accent: #1e40af;
             --border: #e5e7eb;
         }
 
@@ -21,70 +21,78 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, sans-serif;
+            font-family: 'Inter', sans-serif;
             color: var(--text-main);
-            line-height: 1.5;
+            line-height: 1.4;
             background: #f3f4f6;
-            padding: 40px 20px;
+            padding: 20px;
         }
 
         .resume {
             max-width: 850px;
             margin: 0 auto;
             background: white;
-            padding: 50px;
+            padding: 40px 50px;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
 
         header {
             text-align: center;
             border-bottom: 2px solid var(--accent);
-            padding-bottom: 20px;
-            margin-bottom: 25px;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
         }
 
         h1 {
             font-size: 2.2rem;
             font-weight: 700;
-            letter-spacing: -0.025em;
             margin-bottom: 5px;
+            text-transform: uppercase;
         }
 
         .contact {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: var(--text-light);
             display: flex;
             justify-content: center;
-            gap: 15px;
+            gap: 12px;
             flex-wrap: wrap;
         }
 
         .contact a {
             color: var(--accent);
             text-decoration: none;
-            font-weight: 500;
+            font-weight: 600;
+        }
+
+        .summary {
+            font-size: 0.9rem;
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--text-light);
+            line-height: 1.5;
         }
 
         section {
-            margin-bottom: 25px;
+            margin-bottom: 18px;
         }
 
         h2 {
-            font-size: 1.1rem;
+            font-size: 0.95rem;
             text-transform: uppercase;
             letter-spacing: 0.1em;
             color: var(--accent);
             border-bottom: 1px solid var(--border);
-            padding-bottom: 4px;
-            margin-bottom: 12px;
+            padding-bottom: 3px;
+            margin-bottom: 10px;
+            font-weight: 700;
         }
 
         .exp-header {
             display: flex;
             justify-content: space-between;
-            align-items: baseline;
             font-weight: 700;
-            font-size: 1.05rem;
+            font-size: 0.95rem;
         }
 
         .exp-sub {
@@ -92,18 +100,18 @@
             justify-content: space-between;
             font-style: italic;
             color: var(--text-light);
-            margin-bottom: 8px;
-            font-size: 0.95rem;
+            margin-bottom: 5px;
+            font-size: 0.88rem;
         }
 
         ul {
             margin-left: 18px;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
 
         li {
-            margin-bottom: 6px;
-            font-size: 0.95rem;
+            margin-bottom: 3px;
+            font-size: 0.85rem;
             color: var(--text-main);
         }
 
@@ -113,14 +121,14 @@
 
         .skills-grid {
             display: grid;
-            grid-template-columns: 140px 1fr;
-            gap: 10px;
-            font-size: 0.95rem;
+            grid-template-columns: 160px 1fr;
+            gap: 6px;
+            font-size: 0.85rem;
         }
 
         .skills-label {
             font-weight: 700;
-            color: var(--text-light);
+            color: var(--text-main);
         }
 
         @media print {
@@ -132,7 +140,7 @@
             .resume {
                 box-shadow: none;
                 width: 100%;
-                padding: 0;
+                padding: 10px;
             }
         }
     </style>
@@ -147,30 +155,41 @@
                 <span>Mumbai, India</span>
                 <a href="mailto:sayaji.dev@hotmail.com">sayaji.dev@hotmail.com</a>
                 <span>+91 9892200636</span>
-                <a href="https://linkedin.com/in/sayaji">LinkedIn</a>
+                <a href="https://linkedin.com/in/sayajichavan">LinkedIn</a>
                 <a href="https://github.com/Sayaji911">GitHub</a>
             </div>
         </header>
 
+        <div class="summary">
+            <b>Lead DevOps Engineer</b> with over 3.5 years of experience in architecting scalable multi-cloud
+            infrastructure (AWS, Azure, GCP), automating high-velocity CI/CD pipelines, and leading engineering teams.
+            Expert in <b>Kubernetes, Terraform, and GitOps</b>. Proven track record in collaborating with CTOs to align
+            infrastructure with business goals, achieving 35%+ cost reduction and 99.9% system availability.
+        </div>
+
         <section>
             <h2>Technical Skills</h2>
             <div class="skills-grid">
+                <div class="skills-label">Cloud Platforms:</div>
+                <div>AWS (EKS, Lambda, SageMaker, Bedrock), Microsoft Azure, Google Cloud (GCP)</div>
+                <div class="skills-label">IaC & Orchestration:</div>
+                <div>Terraform, AWS CDK, CloudFormation, Kubernetes (EKS/GKE), Helm, Docker-compose</div>
+                <div class="skills-label">CI/CD & GitOps:</div>
+                <div>GitHub Actions (OIDC), ArgoCD, BitBucket Pipeline, Jenkins, GitLab CI/CD</div>
+                <div class="skills-label">Observability Stack:</div>
+                <div>Prometheus, Grafana, Loki, Mimir, Thanos, ELK Stack, New Relic, Site24x7</div>
+                <div class="skills-label">DevSecOps:</div>
+                <div>SonarQube, Trivy, Snyk, Hashicorp Vault, AWS WAF, Security Hub, IAM OIDC</div>
                 <div class="skills-label">Languages:</div>
-                <div>Python (FastAPI, Django), TypeScript (CDK), Go, Bash, SQL (PostgreSQL)</div>
-                <div class="skills-label">Cloud & IaC:</div>
-                <div>AWS (EKS, Lambda, SQS, SageMaker, Bedrock), Terraform, AWS CDK, CloudFormation</div>
-                <div class="skills-label">DevOps:</div>
-                <div>Kubernetes, Docker, Helm, GitHub Actions (OIDC), CircleCI, Jenkins, Liquibase</div>
-                <div class="skills-label">Observability:</div>
-                <div>New Relic, CloudWatch, Prometheus, Grafana, Elasticsearch (ELK)</div>
+                <div>Python (FastAPI, Django), Go, Bash, SQL, YAML</div>
             </div>
         </section>
 
         <section>
-            <h2>Experience</h2>
+            <h2>Professional Experience</h2>
 
             <div class="exp-header">
-                <span>Senior Software & DevOps Engineer</span>
+                <span>Lead DevOps Engineer & Team Lead</span>
                 <span>Jul 2024 – Present</span>
             </div>
             <div class="exp-sub">
@@ -178,19 +197,24 @@
                 <span>Mumbai, India</span>
             </div>
             <ul>
-                <li><b>SecOps & Identity:</b> Eliminated long-lived security credentials by implementing <b>OIDC (OpenID
-                        Connect)</b> for GitHub Actions, securing ECR/EKS deployment workflows.</li>
-                <li><b>Data Governance:</b> Architected a secure <b>AWS SageMaker</b> sandbox environment with VPC
-                    isolation and <b>IAM hardening</b> to enable Data Scientists to train models on sensitive PII data.
+                <li><b>Team Leadership:</b> Manage a team of engineers and oversee customer cloud accounts,
+                    collaborating directly with <b>CTOs</b> to design infrastructure roadmaps that support 100k+ daily
+                    Gen-AI records.</li>
+                <li><b>Multi-Cloud Strategy:</b> Architected and automated cross-provider infrastructure using
+                    <b>Terraform and AWS CDK</b>, enabling seamless transitions between AWS, Azure, and private cloud
+                    environments.
                 </li>
-                <li><b>AI Orchestration:</b> Spearheaded a Gen-AI document pipeline using <b>AWS Bedrock, Textract, and
-                        Lambda</b>, processing 100k+ records daily with automated summarization logic.</li>
-                <li><b>Infrastructure Strategy:</b> Reduced monthly cloud expenditure by <b>35%</b> through automated
-                    auto-scaling policies and migrating legacy services to <b>AWS CDK (TypeScript)</b>.</li>
+                <li><b>Advanced Observability:</b> Integrated a full-stack monitoring system using <b>Prometheus, Loki,
+                        and Mimir</b> to gain real-time insights into EKS clusters, reducing incident response time by
+                    45%.</li>
+                <li><b>DevSecOps Integration:</b> Implemented automated security scanning (Trivy, SonarQube) and
+                    eliminated static credentials by enforcing <b>GitHub OIDC</b> and <b>Hashicorp Vault</b>.</li>
+                <li><b>Cost Management:</b> Optimized multi-tenant cloud architectures, achieving a <b>35% reduction in
+                        OpEx</b> through auto-scaling, spot instance orchestration, and workload rightsizing.</li>
             </ul>
 
             <div class="exp-header">
-                <span>Software Engineer (Module Lead)</span>
+                <span>Software & DevOps Engineer (Module Lead)</span>
                 <span>Nov 2021 – Jul 2024</span>
             </div>
             <div class="exp-sub">
@@ -198,45 +222,47 @@
                 <span>Mumbai, India</span>
             </div>
             <ul>
-                <li><b>Microservices Architecture:</b> Owned end-to-end development of 7 microservices for a "SuperApp",
-                    implementing <b>FastAPI, SQS, and PostgreSQL</b> to handle high-concurrency traffic.</li>
-                <li><b>Distributed Systems:</b> Designed a real-time event-driven ingestion engine for <b>5,000+ live
-                        bus nodes</b> using the Observer pattern and <b>AWS SQS</b>, achieving sub-second data
-                    propagation.</li>
-                <li><b>CI/CD & Deployment:</b> Standardized production deployments for a US-based client using
-                    <b>Kubernetes (EKS) and Helm</b>, achieving 99.9% uptime across blue-green deployment cycles.
+                <li><b>Container Orchestration:</b> Managed large-scale production deployments on <b>Amazon EKS and
+                        ECS</b>, utilizing <b>Helm</b> and <b>ArgoCD</b> for GitOps-based continuous delivery.</li>
+                <li><b>High-Availability Architecture:</b> Engineered a real-time event-driven engine for <b>5,000+ live
+                        bus nodes</b> using AWS SQS and the Observer pattern, ensuring 99.9% uptime for telemetry
+                    processing.</li>
+                <li><b>Migration & Modernization:</b> Led the refactoring of legacy monolithic systems into <b>FastAPI
+                        microservices</b>, resulting in a 2x increase in API throughput and 40% lower maintenance costs.
                 </li>
-                <li><b>Legacy Modernization:</b> Refactored a legacy healthcare platform into a microservices model,
-                    <b>doubling API throughput</b> and reducing infrastructure maintenance costs by 40%.
+                <li><b>Database Automation:</b> Standardized database lifecycle management using <b>Liquibase</b>,
+                    ensuring zero-downtime schema migrations across all environments.</li>
+                <li><b>Pipeline Automation:</b> Built custom CI/CD workflows for FinTech applications with
+                    <b>Blue-Green</b> and <b>Canary</b> deployment patterns to ensure risk-free releases.
                 </li>
-                <li><b>Database Lifecycle:</b> Integrated <b>Liquibase</b> for automated schema migrations, ensuring
-                    zero-downtime database updates across Dev, UAT, and Production environments.</li>
             </ul>
         </section>
 
         <section>
-            <h2>Selected Projects</h2>
+            <h2>Key Projects & Impact</h2>
             <ul>
-                <li><b>Real-time Transit Tracker:</b> Built a serverless pipeline using <b>Lambda and Elasticsearch</b>
-                    to process live telemetry data, visualizing fleet movement on customized New Relic dashboards.</li>
-                <li><b>PII Masking Engine:</b> Developed a Python-based utility to anonymize customer data before
-                    propagation to lower environments, ensuring GDPR/SOC2 compliance for testing.</li>
+                <li><b>Scalable ML Sandbox:</b> Provisioned an isolated <b>AWS SageMaker</b> environment with VPC
+                    hardening to allow secure model training on PII data, complying with global data privacy standards.
+                </li>
+                <li><b>Serverless Data Pipeline:</b> Developed a high-performance Python-based pipeline using <b>Lambda,
+                        Kinesis Firehose, and S3</b> to automate data extraction from external APIs into AWS RDS.</li>
+                <li><b>Static Site IaC:</b> Engineered a secure, serverless resume platform using <b>AWS CDK</b>,
+                    incorporating CloudFront, Route53, and a Lambda-based visitor counter with 100% automated
+                    provisioning.</li>
             </ul>
         </section>
 
         <section>
-            <h2>Education & Certifications</h2>
+            <h2>Certifications & Education</h2>
             <div class="exp-header">
-                <span>AWS Certified Solutions Architect – Associate</span>
-                <span>Oct 2023</span>
+                <span>AWS Certified DevOps Engineer – Professional | Solutions Architect Associate</span>
+            </div>
+            <div class="exp-header" style="margin-top: 5px;">
+                <span>Certified Kubernetes Administrator (CKA) | Terraform Associate (HashiCorp)</span>
             </div>
             <div class="exp-header" style="margin-top: 10px;">
-                <span>B.Sc. in Information Technology</span>
-                <span>2016 – 2020</span>
-            </div>
-            <div class="exp-sub">
                 <span>University of Mumbai</span>
-                <span>Mumbai, India</span>
+                <span>B.Sc. in Information Technology</span>
             </div>
         </section>
     </div>

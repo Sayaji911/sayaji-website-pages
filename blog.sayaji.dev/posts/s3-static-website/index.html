@@ -144,9 +144,11 @@
                 
             <li class="second-level"><a href="#whats-next">What's Next?</a></li>
                 
-                <li class="third-level"><a href="#1-monitoring-alerts">1. Monitoring &amp; Alerts</a></li>
-                <li class="third-level"><a href="#2-optimizing-costs">2. Optimizing Costs</a></li>
-                <li class="third-level"><a href="#3-waf-for-security">3. WAF for Security</a></li>
+                <li class="third-level"><a href="#1-secret-rotation">1. Secret Rotation</a></li>
+                <li class="third-level"><a href="#2-cdk-tests">2. CDK Tests</a></li>
+                <li class="third-level"><a href="#3-monitoring-alerts">3. Monitoring &amp; Alerts</a></li>
+                <li class="third-level"><a href="#4-optimizing-costs">4. Optimizing Costs</a></li>
+                <li class="third-level"><a href="#waf-for-security">. WAF for Security</a></li>
             <li class="second-level"><a href="#conclusion">Conclusion</a></li>
                 
     </ul>
@@ -176,15 +178,33 @@
 <li><strong>DynamoDB</strong> - Store the visitor count</li>
 <li><strong>Secrets Manager</strong> - Store the API secret</li>
 </ul>
-<p><strong>The Flow:</strong>
-1. User visits <code>resume.sayaji.dev</code>
-2. Route53 routes to CloudFront distribution
-3. CloudFront serves static files from S3
-4. JavaScript calls <code>/count</code> endpoint
-5. CloudFront routes <code>/count</code> to API Gateway (with secret header)
-6. API Gateway authorizer validates the secret
-7. Counter Lambda updates DynamoDB and returns count
-8. Frontend displays the visitor count</p>
+<p><strong>The Flow:</strong></p>
+<ol>
+<li>
+<p>User visits <code>resume.sayaji.dev</code></p>
+</li>
+<li>
+<p>Route53 routes to CloudFront distribution</p>
+</li>
+<li>
+<p>CloudFront serves static files from S3</p>
+</li>
+<li>
+<p>JavaScript calls <code>/count</code> endpoint</p>
+</li>
+<li>
+<p>CloudFront routes <code>/count</code> to API Gateway (with secret header)</p>
+</li>
+<li>
+<p>API Gateway authorizer validates the secret</p>
+</li>
+<li>
+<p>Counter Lambda updates DynamoDB and returns count</p>
+</li>
+<li>
+<p>Frontend displays the visitor count</p>
+</li>
+</ol>
 <h2 id="why-aws-cdk">Why AWS CDK?</h2>
 <p>I think CDK is new territory for me. I have used other IaC tools like Terraform and I liked them. But I wanted to try something new.</p>
 <p><strong>CDK uses three core concepts:</strong></p>
@@ -296,7 +316,7 @@
 <span class="p">});</span>
 </code></pre></div></p>
 <h2 id="the-pattern-stack-composition">The Pattern: Stack Composition</h2>
-<p>Instead of creating one giant stack, I split the stack into multiple logical stacks.</p>
+<p>Now instead of creating one giant stack with all the constructs, I split the stack into multiple logical stacks.</p>
 <div class="highlight"><pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="nx">app</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">cdk</span><span class="p">.</span><span class="nx">App</span><span class="p">();</span>
 
 <span class="c1">// 1. Base infrastructure (deploy once)</span>
@@ -409,11 +429,15 @@ python<span class="w"> </span>-m<span class="w"> </span>unittest<span class="w">
 </ol>
 <h2 id="whats-next">What's Next?</h2>
 <p>Now that we have the foundation solid, here are some ideas I will be exploring:</p>
-<h3 id="1-monitoring-alerts">1. Monitoring &amp; Alerts</h3>
+<h3 id="1-secret-rotation">1. Secret Rotation</h3>
+<p>The API Secret is not rotated. We can either use Secret Manager to rotate the secret or use a rotation lambda function.</p>
+<h3 id="2-cdk-tests">2. CDK Tests</h3>
+<p>In this setup we have not covered CDK unit tests. We can add CDK unit tests to ensure the infrastructure is built correctly.</p>
+<h3 id="3-monitoring-alerts">3. Monitoring &amp; Alerts</h3>
 <p>We can use <strong>New Relic</strong> or <strong>Data Dog</strong> to monitor our simple infrastructure.</p>
-<h3 id="2-optimizing-costs">2. Optimizing Costs</h3>
+<h3 id="4-optimizing-costs">4. Optimizing Costs</h3>
 <p>It costs me less than $5 per month to run this infrastructure.</p>
-<h3 id="3-waf-for-security">3. WAF for Security</h3>
+<h3 id="waf-for-security">. WAF for Security</h3>
 <p>Protect against DDoS and common attacks with AWS WAF rate limiting. (but this is expensive!)</p>
 <h2 id="conclusion">Conclusion</h2>
 <p>It was fun doing this, and I learned a lot about CDK and AWS. As a developer, I find CDK fluid and feels like I am slipping into a familiar pair of shoes. We get to use constructs, functions, loops and variables and suddenly infrastructure stops feeling like configuration files and starts feeling like code. </p></div>

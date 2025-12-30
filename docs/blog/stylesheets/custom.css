@@ -22,9 +22,11 @@ body.dark-mode {
 
 body.dark-mode .col-md-9,
 body.dark-mode .bs-sidebar,
+body.dark-mode .bs-sidenav,
 body.dark-mode .navbar-default {
     background: var(--bg-dark) !important;
     color: var(--text-dark) !important;
+    background-image: none !important;
 }
 
 body.dark-mode h1,
